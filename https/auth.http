@@ -1,0 +1,19 @@
+@local=http://localhost:3000/api
+
+### 🟢 Login
+POST {{local}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Hoang240300"
+}
+
+### 🔐 Check Auth (Kiểm tra access_token trong cookie)
+GET {{local}}/auth/check-auth
+
+### 🔁 Refresh Access Token (Từ refresh_token trong cookie)
+GET {{local}}/auth/refresh
+
+### 🔴 Logout
+POST {{local}}/auth/logout

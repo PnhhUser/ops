@@ -1,12 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import * as cookieParser from 'cookie-parser';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+
+  const configService = app.get(ConfigService);
+
+  const PORT = configService.get<number>('app.port')!;
+
+  app.setGlobalPrefix('api');
+
+  app.use(cookieParser());
+
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+  });
+
+  await app.listen(PORT);
 }
 
 bootstrap().catch((error) => {
-  Logger.error('Bootstrap failed in main.ts', error);
+  Logger.error(`Bootstrap failed: ${error}`, 'main');
 });
