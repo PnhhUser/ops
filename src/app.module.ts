@@ -14,7 +14,7 @@ import { PositionModule } from './modules/position/position.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, jwtConfig, mysqlConfig],
-      envFilePath: 'environments/.env.development',
+      envFilePath: 'environments/.env.production',
     }),
     TypeOrmModule.forRootAsync(mysqlProvider),
     AuthModule,

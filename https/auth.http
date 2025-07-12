@@ -12,6 +12,7 @@ Content-Type: application/json
 ### 🔐 Check Auth (Kiểm tra access_token trong cookie)
 GET {{local}}/auth/check-auth
 
+
 ### 🔁 Refresh Access Token (Từ refresh_token trong cookie)
 GET {{local}}/auth/refresh
 
