@@ -1,8 +1,3 @@
-import crypto from 'crypto';
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-(globalThis as any).crypto = crypto;
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
