@@ -7,9 +7,10 @@ import {
   ManyToOne,
   JoinColumn,
   OneToOne,
+  RelationId,
 } from 'typeorm';
 import { PositionEntity } from './position.entity';
-import { Gender } from 'src/common/constants/enums/employee.enum';
+import { Gender } from '../../common/constants/enums/employee.enum';
 import { AccountEntity } from './account.entity';
 
 @Entity({ name: 'employees' })
@@ -23,32 +24,38 @@ export class EmployeeEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: true })
-  phoneNumber: string;
+  @Column({ type: 'varchar', nullable: true })
+  phoneNumber: string | null;
 
-  @Column({ nullable: true })
-  address: string;
+  @Column({ type: 'varchar', nullable: true })
+  address: string | null;
 
   @Column({ type: 'enum', enum: Gender, default: Gender.OTHER })
   gender: Gender;
 
   @Column({ type: 'date', nullable: true })
-  dateOfBirth: Date;
+  dateOfBirth: Date | null;
 
   @ManyToOne(() => PositionEntity, (position) => position.employees, {
     nullable: true,
   })
   @JoinColumn({ name: 'positionId' })
-  position: PositionEntity;
+  position: PositionEntity | null;
+
+  @RelationId((employee: EmployeeEntity) => employee.position)
+  positionId: number | null;
 
   @Column({ type: 'date', nullable: true })
-  startDate: Date;
+  startDate: Date | null;
 
   @OneToOne(() => AccountEntity, (account) => account.employee, {
     nullable: true,
   })
   @JoinColumn({ name: 'accountId' })
-  account: AccountEntity;
+  account: AccountEntity | null;
+
+  @RelationId((employee: EmployeeEntity) => employee.account)
+  accountId: number | null;
 
   @Column({ default: true })
   isActive: boolean;

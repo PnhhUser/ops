@@ -1,0 +1,30 @@
+@local = http://localhost:3000/api
+
+
+### Get list of departments
+GET {{local}}/departments
+
+
+### Create new department
+POST {{local}}/departments
+Content-Type: application/json
+
+{
+  "name": "Marketing",
+  "description": "Phòng Marketing"
+}
+
+
+### Update department
+PUT {{local}}/departments
+Content-Type: application/json
+
+{
+  "departmentId": 1,
+  "name": "Marketing",
+  "description": "Phòng Marketing đã cập nhật"
+}
+
+
+### Delete department by ID
+DELETE {{local}}/departments/1

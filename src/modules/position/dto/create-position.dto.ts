@@ -1,17 +1,17 @@
-import { IsNotEmpty, IsString, IsNumber, ValidateIf } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
 import { ErrorMessages } from 'src/common/constants/error-message.constant';
 import { PositionEntity } from 'src/database/entities/position.entity';
 
 export class CreatePositionDTO {
-  @IsNotEmpty({ message: ErrorMessages.position.NAME_EMPTY })
   @IsString({ message: ErrorMessages.position.NAME_INVALID })
+  @IsNotEmpty({ message: ErrorMessages.position.NAME_EMPTY })
   name: string;
 
-  @ValidateIf((o: CreatePositionDTO) => o.description !== undefined)
+  @IsOptional()
   @IsString({ message: ErrorMessages.position.DESCRIPTION_INVALID })
   description: string | null;
 
-  @ValidateIf((o: CreatePositionDTO) => o.baseSalary !== undefined)
+  @IsOptional()
   @IsNumber({}, { message: ErrorMessages.position.BASE_SALARY_INVALID })
   baseSalary: number | null;
 
@@ -20,6 +20,7 @@ export class CreatePositionDTO {
 
     position.name = dto.name;
     position.description = !dto.description?.trim() ? null : dto.description;
+    position.baseSalary = dto.baseSalary;
 
     return position;
   }

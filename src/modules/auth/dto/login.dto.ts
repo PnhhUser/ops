@@ -1,12 +1,22 @@
-import { IsNotEmpty, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  PASSWORD_LENGTH,
+  USERNAME_LENGTH,
+} from 'src/common/constants/base.constant';
 import { ErrorMessages } from 'src/common/constants/error-message.constant';
 
 export class LoginDTO {
-  @IsNotEmpty({ message: ErrorMessages.Auth.USERNAME_EMPTY })
-  @MinLength(3, { message: ErrorMessages.Auth.USERNAME_TOO_SHORT })
+  @MinLength(USERNAME_LENGTH, {
+    message: ErrorMessages.account.USERNAME_TOO_SHORT,
+  })
+  @IsString({ message: ErrorMessages.account.USERNAME_INVALID })
+  @IsNotEmpty({ message: ErrorMessages.account.USERNAME_EMPTY })
   username: string;
 
-  @IsNotEmpty({ message: ErrorMessages.Auth.PASSWORD_EMPTY })
-  @MinLength(6, { message: ErrorMessages.Auth.PASSWORD_TOO_SHORT })
+  @MinLength(PASSWORD_LENGTH, {
+    message: ErrorMessages.account.PASSWORD_TOO_SHORT,
+  })
+  @IsString({ message: ErrorMessages.account.PASSWORD_INVALID })
+  @IsNotEmpty({ message: ErrorMessages.account.PASSWORD_EMPTY })
   password: string;
 }

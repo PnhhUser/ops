@@ -1,31 +1,204 @@
 @local=http://localhost:3000/api
+@token= access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsIm5hbWUiOiJob2FuZyIsImlhdCI6MTc1MjUzOTY1NywiZXhwIjoxNzUyNTQzMjU3fQ.sWleCZf4JbdyGP97WQtMrFhEJTuNu4wUH7Whldf2eA4;
 
 ### 📥 Get All Accounts
 GET {{local}}/accounts
+Cookie: {{token}}
 
-### ➕ Create New Account
+
+#---------------  TEST THÊM ACCOUNT -------------------#
+
+### Kiểm tra username null
 POST {{local}}/accounts
 Content-Type: application/json
 
 {
-  "username": "hog",
-  "password": "123456"
+  "username": null
 }
 
-### 🔄 Update Account
+### Kiểm tra username không phải là chuỗi
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": 4235
+}
+
+### Kiểm tra username là một chuỗi rỗng
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": ""
+}
+
+### Kiểm tra username có độ dài dưới 3
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "ac"
+}
+
+### Kiểm tra username trùng
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456",
+  "roleId": 1
+}
+
+### Kiểm tra password null
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": null
+}
+
+### Kiểm tra password là một chuỗi rỗng
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": ""
+}
+
+### Kiểm tra password không phải là một chuỗi
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": 23543256235
+}
+
+### Kiểm tra roleId null
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456",
+  "roleId": null
+}
+
+### Kiểm tra roleId không phải là một số
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456",
+  "roleId": "234324"
+}
+
+### Kiểm tra roleId là một chuỗi rỗng
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456",
+  "roleId": ""
+}
+
+### Kiểm tra roleId nhỏ hơn 1
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin56",
+  "password": "123456",
+  "roleId": 0
+}
+
+### Kiểm tra roleId không tồn tại
+POST {{local}}/accounts
+Content-Type: application/json
+
+{
+  "username": "admin56",
+  "password": "123456",
+  "roleId": 5
+}
+
+#---------------  TEST SỬA ACCOUNT -------------------#
+
+### Kiểm tra accountId null
 PUT {{local}}/accounts
 Content-Type: application/json
 
 {
-  "accountId": 3,
-  "username": "hoang",
-  "password": "123456"
+  "accountId": null,
+  "username": "",
+  "password": "",
+  "roleId": 0
 }
 
-### 🗑️ Remove Account
-DELETE {{local}}/accounts
+### Kiểm tra accountId là một chuỗi rỗng
+PUT {{local}}/accounts
 Content-Type: application/json
 
 {
-  "accountId": 2
+  "accountId": ""
 }
+
+### Kiểm tra accountId là không phải là một số
+PUT {{local}}/accounts
+Content-Type: application/json
+
+{
+  "accountId": "345354"
+}
+
+### Kiểm tra accountId nhỏ hơn 1
+PUT {{local}}/accounts
+Content-Type: application/json
+
+{
+  "accountId": 0
+}
+
+### Kiểm tra trùng với username người khác không
+PUT {{local}}/accounts
+Content-Type: application/json
+
+{
+  "accountId": 5,
+  "username": "admin",
+  "password": "123456",
+  "roleId": 5
+}
+
+### Kiểm tra accountId có tồn tại không
+PUT {{local}}/accounts
+Content-Type: application/json
+
+{
+  "accountId": 10,
+  "username": "admin",
+  "password": "123456",
+  "roleId": 5
+}
+
+### Kiểm tra role không tồn tại
+PUT {{local}}/accounts
+Content-Type: application/json
+
+{
+  "accountId": 5,
+  "username": "hoangthien",
+  "password": "123456",
+  "roleId": 5
+}
+
+#---------------  TEST XÓA ACCOUNT -------------------#
+
+
+### Kiểm tra xóa sai accountId
+DELETE {{local}}/accounts/100

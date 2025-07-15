@@ -1,8 +1,8 @@
-import { AccountService } from './../account/account.service';
 import {
   Body,
   Controller,
   Get,
+  Inject,
   Post,
   Req,
   Res,
@@ -13,18 +13,20 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
 import { parseDuration } from 'src/common/helpers/duration.helper';
-import { serializeResponse } from 'src/common/serializers/response.serializer';
-import { TOKEN_NAME } from 'src/common/constants/base.constant';
+import { responseSerialize } from 'src/common/serializers/response.serializer';
+import { REFRESH_NAME, TOKEN_NAME } from 'src/common/constants/base.constant';
 import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
-import { JwtPayload } from 'src/common/interfaces/payload.interface';
+import { IJwtPayload } from 'src/modules/auth/interface/IJwtPayload';
 import { JwtRefreshGuard } from 'src/common/guards/jwt-refresh.guard';
+import { IAccountService } from '../account/interface/IAccountService';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
-    private readonly accountService: AccountService,
+    @Inject('IAccountService')
+    private readonly accountService: IAccountService,
   ) {}
 
   /**
@@ -39,6 +41,7 @@ export class AuthController {
     @Body() login: LoginDTO,
   ) {
     const { username, password } = login;
+
     const env = this.configService.get<string>('app.env');
 
     // Validate thông tin đăng nhập
@@ -59,14 +62,14 @@ export class AuthController {
     });
 
     // Ghi refresh token vào cookie
-    res.cookie('refresh_token', refreshToken, {
+    res.cookie(REFRESH_NAME, refreshToken, {
       httpOnly: true,
       maxAge: parseDuration(this.configService.get('jwt.refreshIn')!),
       sameSite: 'lax',
       secure: env === 'production',
     });
 
-    return serializeResponse({}, 'Login successfully');
+    return responseSerialize({}, 'Login successfully');
   }
 
   /**
@@ -77,8 +80,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('check-auth')
   checkAuth(@Req() req: Request) {
-    const user = req.user as JwtPayload;
-    return serializeResponse({ user }, 'Authenticated');
+    const user = req.user as IJwtPayload;
+    return responseSerialize({ user }, 'Authenticated');
   }
 
   /**
@@ -92,7 +95,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const user = req.user as JwtPayload;
+    const user = req.user as IJwtPayload;
 
     const newAccessToken = await this.authService.generateAccessToken(
       user.sub,
@@ -108,7 +111,7 @@ export class AuthController {
       secure: env === 'production',
     });
 
-    return serializeResponse({}, 'Access token refreshed');
+    return responseSerialize({}, 'Access token refreshed');
   }
 
   /**
@@ -118,7 +121,7 @@ export class AuthController {
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   async logout(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
-    const tokenPayload = req.user as JwtPayload;
+    const tokenPayload = req.user as IJwtPayload;
 
     await this.accountService.setOffline(tokenPayload.sub);
 
@@ -136,6 +139,6 @@ export class AuthController {
       secure: env === 'production',
     });
 
-    return serializeResponse({}, 'Logged out successfully');
+    return responseSerialize({}, 'Logged out successfully');
   }
 }

@@ -1,4 +1,5 @@
 @local=http://localhost:3000/api
+@token= access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsIm5hbWUiOiJob2FuZyIsImlhdCI6MTc1MjU0Njk0MywiZXhwIjoxNzUyNTUwNTQzfQ.JbowHxRBMaaoanhINAoGs3GApK1Gck4IxklheDlFD64;
 
 ### 🟢 Login
 POST {{local}}/auth/login
@@ -6,14 +7,16 @@ Content-Type: application/json
 
 {
   "username": "admin",
-  "password": "Hoang240300"
+  "password": "admin123"
 }
 
 ### 🔐 Check Auth (Kiểm tra access_token trong cookie)
 GET {{local}}/auth/check-auth
+Cookie: {{token}}
 
 ### 🔁 Refresh Access Token (Từ refresh_token trong cookie)
 GET {{local}}/auth/refresh
+Cookie: {{token}}
 
 ### 🔴 Logout
 POST {{local}}/auth/logout

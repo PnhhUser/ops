@@ -1,0 +1,33 @@
+@local=http://localhost:3000/api
+
+@token= access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsIm5hbWUiOiJob2FuZyIsImlhdCI6MTc1MjU0Njk0MywiZXhwIjoxNzUyNTUwNTQzfQ.JbowHxRBMaaoanhINAoGs3GApK1Gck4IxklheDlFD64;
+
+### 📥 Get All Permissions
+GET {{local}}/permissions
+Cookie: {{token}}
+
+### ➕ Add Permission
+POST {{local}}/permissions
+Content-Type: application/json
+
+{
+  "key": "view",
+  "name": "Xem",
+  "description": "Quyền cho phép xem dữ liệu"
+}
+
+### 🔄 Update Employee (nếu bạn có API update)
+PUT {{local}}/permissions
+Content-Type: application/json
+Cookie: {{token}}
+
+{
+  "permissionId": 2,
+  "key": "update",
+  "name": "Chỉnh sửa",
+  "description": "Quyền cho phép chỉnh sửa dữ liệu"
+}
+
+### 🗑️ Delete Employee (nếu bạn dùng path param)
+DELETE {{local}}/permissions/6
+

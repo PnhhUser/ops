@@ -1,35 +1,29 @@
-import 'dotenv/config';
 import { DataSource } from 'typeorm';
-import { AccountEntity } from '../entities/account.entity';
 import * as bcrypt from 'bcrypt';
+import { AccountEntity } from '../entities/account.entity';
+import { RoleEntity } from '../entities/role.entity';
 import { UserRole } from '../../common/constants/enums/role.enum';
 
-export const seedDefaultAccount = async (dataSource: DataSource) => {
+export async function seedDefaultAccount(dataSource: DataSource) {
   const accountRepo = dataSource.getRepository(AccountEntity);
+  const roleRepo = dataSource.getRepository(RoleEntity);
 
-  const existing = await accountRepo.findOneBy({ username: 'admin' });
-
-  const defaultPassword = process.env.DEFAULT_ADMIN_PASSWORD;
-
-  if (!defaultPassword) {
-    throw new Error('Missing DEFAULT_ADMIN_PASSWORD in env file');
+  const adminExists = await accountRepo.findOneBy({ username: 'admin' });
+  if (adminExists) {
+    console.log('🔁 Admin account already exists.');
+    return;
   }
 
-  if (!existing) {
-    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
-
-    const admin = accountRepo.create({
-      username: 'admin',
-      password: hashedPassword,
-      isActive: true,
-      role: UserRole.ADMIN,
-      lastSeen: null,
-    });
-
-    await accountRepo.save(admin);
-
-    console.log('✅ Admin account created.');
-  } else {
-    console.log('ℹ️ Admin account already exists.');
+  const adminRole = await roleRepo.findOneBy({ key: UserRole.ADMIN });
+  if (!adminRole) {
+    throw new Error('❌ Cannot create admin account: admin role not found.');
   }
-};
+
+  const admin = new AccountEntity();
+  admin.username = 'admin';
+  admin.password = await bcrypt.hash('admin123', 10);
+  admin.role = adminRole;
+
+  await accountRepo.save(admin);
+  console.log('✅ Admin account seeded.');
+}

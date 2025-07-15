@@ -1,6 +1,9 @@
-import { Response } from '../interfaces/response.interface';
+import { IResponseCustom } from '../interfaces/IResponseCustom';
 
-export function serializeResponse<T>(data: T, message?: string): Response<T> {
+export function responseSerialize<T>(
+  data: T,
+  message?: string,
+): IResponseCustom<T> {
   return {
     success: true,
     data,

@@ -3,9 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { BaseRepository } from './base.repository';
+import { IAccountRepository } from './interfaces/IAccountRepository';
 
 @Injectable()
-export class AccountRepository extends BaseRepository<AccountEntity> {
+export class AccountRepository
+  extends BaseRepository<AccountEntity>
+  implements IAccountRepository<AccountEntity>
+{
   constructor(
     @InjectRepository(AccountEntity)
     repo: Repository<AccountEntity>,
@@ -13,7 +17,7 @@ export class AccountRepository extends BaseRepository<AccountEntity> {
     super(repo);
   }
 
-  async accountExist(username: string): Promise<AccountEntity | null> {
+  async getByUsername(username: string): Promise<AccountEntity | null> {
     return await this.repository.findOneBy({ username });
   }
 }

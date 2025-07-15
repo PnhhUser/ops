@@ -1,0 +1,31 @@
+@local=http://localhost:3000/api
+
+### Get permissions by role
+GET {{local}}/role-permission/role/1/permissions
+
+###
+
+### Assign permissions to role
+POST {{local}}/role-permission
+Content-Type: application/json
+
+{
+  "roleId": 1,
+  "permissionIds": [9]
+}
+
+###
+
+### Update permissions for role (overwrite all)
+PUT {{local}}/role-permission
+Content-Type: application/json
+
+{
+  "roleId": 1,
+  "permissionIds": [1,2,3,4]
+}
+
+###
+
+### Remove one permission from role
+DELETE {{local}}/role-permission/1/2

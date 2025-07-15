@@ -1,0 +1,116 @@
+@local=http://localhost:3000/api
+
+@token= access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsIm5hbWUiOiJob2FuZyIsImlhdCI6MTc1MjU0Njk0MywiZXhwIjoxNzUyNTUwNTQzfQ.JbowHxRBMaaoanhINAoGs3GApK1Gck4IxklheDlFD64;
+
+### 📥 Get All Employees
+GET {{local}}/employees
+Cookie: {{token}}
+
+
+#---------------  TEST THÊM NHÂN VIÊN -------------------#
+
+### Kiểm tra fullname null
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": null
+}
+
+### Kiểm tra fullname là một chuỗi rỗng
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": ""
+}
+
+### Kiểm tra fullname không phải là một chuỗi
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": 3453453453
+}
+
+### Kiểm tra fullname toàn là số
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": "3453453453"
+}
+
+### Kiểm tra email null
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": "pnh hoang",
+  "email": null
+}
+
+### Kiểm tra email là một chuỗi rỗng
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": "pnh hoang",
+  "email": ""
+}
+
+### Kiểm tra email là một số
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": "pnh hoang",
+  "email": 34534
+}
+
+### Kiểm tra email không hợp lệ
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": "pnh hoang",
+  "email": "pnhh@gmail."
+}
+
+
+### Kiểm tra email đã tồn tại
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": "pnh hoang",
+  "email": "pnhh@gmail.com",
+  "gender": "other",
+  "dateOfBirth": "1999-03-11",
+  "startDate": "1999-03-11"
+}
+
+### Kiểm tra address là không phải một chuỗi
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": "pnh hoang",
+  "email": "pnhh@gmail.com",
+  "address": 213214,
+  "gender": "other",
+  "dateOfBirth": "1999-03-11",
+  "startDate": "1999-03-11"
+}
+
+### Kiểm tra dateOfBirth không hợp lệ
+POST {{local}}/employees
+Content-Type: application/json
+
+{
+  "fullName": "pnh hoang",
+  "email": "pnh1h@gmail.com",
+  "gender": "other",
+  "dateOfBirth": 345345345,
+  "startDate": "1999-03-11"
+}
