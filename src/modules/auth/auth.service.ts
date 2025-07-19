@@ -1,18 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from 'src/common/interfaces/payload.interface';
+import { IJwtPayload } from 'src/modules/auth/interface/IJwtPayload';
 import { ExceptionSerializer } from 'src/common/serializers/exception.serializers';
 import { AccountEntity } from 'src/database/entities/account.entity';
-import { AccountRepository } from 'src/database/repositories/account.repository';
 import * as bcrypt from 'bcrypt';
+import jwtConfig from 'src/config/jwt.config';
+import { ErrorMessages } from 'src/common/constants/error-message.constant';
+import { IAccountRepository } from 'src/database/repositories/interfaces/IAccountRepository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly accountRepository: AccountRepository,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtType: ConfigType<typeof jwtConfig>,
+    @Inject('IAccountRepository')
+    private readonly accountRepository: IAccountRepository<AccountEntity>,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -29,7 +33,9 @@ export class AuthService {
     const account = await this.validate(username, password);
 
     if (!account) {
-      throw ExceptionSerializer.unauthorized('Invalid username or password');
+      throw ExceptionSerializer.unauthorized(
+        ErrorMessages.account.ACCOUNT_FALSE,
+      );
     }
 
     const accessToken = await this.generateAccessToken(
@@ -52,7 +58,7 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<AccountEntity | null> {
-    const account = await this.accountRepository.accountExist(username);
+    const account = await this.accountRepository.getByUsername(username);
 
     if (!account) return null;
 
@@ -64,11 +70,11 @@ export class AuthService {
    * Tạo access_token từ userId + username
    */
   async generateAccessToken(userId: number, username: string): Promise<string> {
-    const payload: JwtPayload = { sub: userId, name: username };
+    const payload: IJwtPayload = { sub: userId, name: username };
 
     return this.jwtService.signAsync(payload, {
-      expiresIn: this.configService.get<string>('jwt.expiresIn'),
-      secret: this.configService.get<string>('jwt.secret'),
+      expiresIn: this.jwtType.expiresIn,
+      secret: this.jwtType.secret,
     });
   }
 
@@ -79,11 +85,11 @@ export class AuthService {
     userId: number,
     username: string,
   ): Promise<string> {
-    const payload: JwtPayload = { sub: userId, name: username };
+    const payload: IJwtPayload = { sub: userId, name: username };
 
     return this.jwtService.signAsync(payload, {
-      expiresIn: this.configService.get<string>('jwt.refreshIn'),
-      secret: this.configService.get<string>('jwt.refreshSecret'),
+      expiresIn: this.jwtType.refreshIn,
+      secret: this.jwtType.refreshSecret,
     });
   }
 }

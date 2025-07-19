@@ -5,46 +5,48 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
+  Param,
   Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
 import { CreatePositionDTO } from './dto/create-position.dto';
-import { serializeResponse } from 'src/common/serializers/response.serializer';
+import { responseSerialize } from 'src/common/serializers/response.serializer';
 import { UpdatePositionDTO } from './dto/update-position.dto';
-import { RemovePositionDTO } from './dto/remove-position.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('positions')
 export class PositionController {
-  constructor(private readonly positionService: PositionService) {}
+  constructor(
+    @Inject('IPositionService')
+    private readonly positionService: PositionService,
+  ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async positions() {
-    return await this.positionService.getPositions();
+    const data = await this.positionService.getPositions();
+    return responseSerialize(data, 'Successfully fetched position list');
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   async addPosition(@Body() position: CreatePositionDTO) {
     await this.positionService.addPosition(position);
 
-    return serializeResponse({}, 'New position created successfully');
+    return responseSerialize({}, 'New position created successfully');
   }
 
   @Put()
-  @UseGuards(JwtAuthGuard)
   async updatePosition(@Body() position: UpdatePositionDTO) {
     await this.positionService.updatePosition(position);
 
-    return serializeResponse({}, 'Position update successful');
+    return responseSerialize({}, 'Position update successful');
   }
 
-  @Delete()
-  @UseGuards(JwtAuthGuard)
-  async removePosition(@Body() position: RemovePositionDTO) {
-    await this.positionService.removePosition(position.positionId);
+  @Delete(':id')
+  async removePosition(@Param('id') id: number) {
+    await this.positionService.removePosition(id);
 
-    return serializeResponse({}, 'Position remove successful');
+    return responseSerialize({}, 'Position remove successful');
   }
 }

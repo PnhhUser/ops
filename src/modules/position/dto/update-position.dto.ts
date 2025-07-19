@@ -4,8 +4,8 @@ import { PositionEntity } from 'src/database/entities/position.entity';
 import { CreatePositionDTO } from './create-position.dto';
 
 export class UpdatePositionDTO extends CreatePositionDTO {
-  @IsInt({ message: ErrorMessages.position.ID_NOT_INTEGER })
   @Min(1, { message: ErrorMessages.position.ID_TOO_SMALL })
+  @IsInt({ message: ErrorMessages.position.ID_NOT_INTEGER })
   positionId: number;
 
   static override toEntity(dto: UpdatePositionDTO): PositionEntity {

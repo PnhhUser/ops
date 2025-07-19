@@ -1,8 +1,11 @@
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { IBaseRepository } from './interfaces/IBaseRepository';
 
 @Injectable()
-export class BaseRepository<T extends { id: number }> {
+export class BaseRepository<T extends { id: number }>
+  implements IBaseRepository<T>
+{
   constructor(protected readonly repository: Repository<T>) {}
 
   async getById(id: number): Promise<T | null> {

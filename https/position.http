@@ -1,14 +1,18 @@
 @local=http://localhost:3000/api
+@token= access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsIm5hbWUiOiJob2FuZyIsImlhdCI6MTc1MjUzOTY1NywiZXhwIjoxNzUyNTQzMjU3fQ.sWleCZf4JbdyGP97WQtMrFhEJTuNu4wUH7Whldf2eA4;
 
 ### 📥 Get All Positions
 GET {{local}}/positions
+Cookie: {{token}}
 
 ### ➕ Add Position
 POST {{local}}/positions
 Content-Type: application/json
 
 {
-  "name": "employee"
+  "name": "cleaner",
+  "description": "Tạp vụ",
+  "baseSalary": 4000000
 }
 
 ### 🔄 Update Position
@@ -16,16 +20,11 @@ PUT {{local}}/positions
 Content-Type: application/json
 
 {
-  "positionId": 3,
-  "name": "emp",
-  "description": "",
-  "baseSalary": 0
+  "positionId": 2,
+  "name": "marketing_executive",
+  "description": "Nhân viên marketing",
+  "baseSalary": 6000000
 }
 
 ### 🗑️ Remove Position
-DELETE {{local}}/positions
-Content-Type: application/json
-
-{
-  "positionId": 1
-}
+DELETE {{local}}/positions/76

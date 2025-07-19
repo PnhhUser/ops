@@ -5,8 +5,12 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  RelationId,
 } from 'typeorm';
 import { EmployeeEntity } from './employee.entity';
+import { DepartmentEntity } from './department.entity';
 
 @Entity({ name: 'positions' })
 export class PositionEntity {
@@ -24,6 +28,16 @@ export class PositionEntity {
 
   @OneToMany(() => EmployeeEntity, (employee) => employee.position)
   employees: EmployeeEntity[];
+
+  @ManyToOne(() => DepartmentEntity, (department) => department.positions, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'departmentId' })
+  department: DepartmentEntity | null;
+
+  @RelationId((position: PositionEntity) => position.department)
+  departmentId: number | null;
 
   @CreateDateColumn()
   createdAt: Date;
