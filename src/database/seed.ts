@@ -1,15 +1,16 @@
 import { AppDataSource } from './data-source';
 import { seedDefaultAccount } from './seeds/account.seed';
+import { seedPermission } from './seeds/permission.seed';
 import { seedRoles } from './seeds/role.seed';
 
 AppDataSource.initialize()
   .then(async (dataSource) => {
     console.log('⚙️  Seeding default data...');
 
-    // Step 1: Seed Roles (must come first)
+    await seedPermission(dataSource);
+
     await seedRoles(dataSource);
 
-    // Step 2: Seed Admin Account
     await seedDefaultAccount(dataSource);
 
     console.log('🌱 Done.');
