@@ -68,7 +68,12 @@ export class AuthController {
       secure: env === 'production',
     });
 
-    return responseSerialize({}, 'Login successfully');
+    // Lấy thông tin người dùng đã ghi vào access token
+
+    return responseSerialize(
+      { id: account.userId, name: account.name },
+      'Login successfully',
+    );
   }
 
   /**
@@ -80,7 +85,10 @@ export class AuthController {
   @Get('check-auth')
   checkAuth(@Req() req: Request) {
     const user = req.user as IJwtPayload;
-    return responseSerialize({ user }, 'Authenticated');
+    return responseSerialize(
+      { id: user.sub, name: user.name },
+      'Authenticated',
+    );
   }
 
   /**
@@ -89,7 +97,7 @@ export class AuthController {
    * - Trả lại access_token mới
    */
   @UseGuards(JwtRefreshGuard)
-  @Get('refresh')
+  @Post('refresh')
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
@@ -110,7 +118,10 @@ export class AuthController {
       secure: env === 'production',
     });
 
-    return responseSerialize({}, 'Access token refreshed');
+    return responseSerialize(
+      { id: user.sub, name: user.name },
+      'Access token refreshed',
+    );
   }
 
   /**

@@ -14,6 +14,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
 import { CreateAccountDTO } from './dto/create-account.dto';
 import { UpdateAccountDTO } from './dto/update-account.dto';
 import { IAccountService } from './interface/IAccountService';
+import { AccountDTO } from './dto/account.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('accounts')
@@ -27,7 +28,9 @@ export class AccountController {
   async accounts() {
     const accounts = await this.accountService.getAccounts();
 
-    return responseSerialize(accounts, 'Successfully fetched account list');
+    const model = AccountDTO.toModel(accounts);
+
+    return responseSerialize(model, 'Successfully fetched account list');
   }
 
   // Create account

@@ -15,7 +15,7 @@ GET {{local}}/auth/check-auth
 Cookie: {{token}}
 
 ### 🔁 Refresh Access Token (Từ refresh_token trong cookie)
-GET {{local}}/auth/refresh
+POST {{local}}/auth/refresh
 Cookie: {{token}}
 
 ### 🔴 Logout
