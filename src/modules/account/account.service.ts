@@ -22,6 +22,10 @@ export class AccountService implements IAccountService {
     return await this.accountRepository.getAll();
   }
 
+  async getAccount(accountId: number): Promise<AccountEntity | null> {
+    return await this.accountRepository.getById(accountId);
+  }
+
   async addAccount(dto: CreateAccountDTO) {
     const username = await this.accountRepository.getByUsername(dto.username);
 

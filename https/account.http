@@ -5,6 +5,10 @@
 GET {{local}}/accounts
 Cookie: {{token}}
 
+### 📥 Get one Account
+GET {{local}}/accounts/2
+Cookie: {{token}}
+
 
 #---------------  TEST THÊM ACCOUNT -------------------#
 
@@ -201,4 +205,4 @@ Content-Type: application/json
 
 
 ### Kiểm tra xóa sai accountId
-DELETE {{local}}/accounts/100
+DELETE {{local}}/accounts/5

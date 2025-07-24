@@ -9,7 +9,24 @@ export class AccountDTO {
   createdAt: Date;
   updatedAt: Date;
 
-  static toModel(entities: AccountEntity[] | null): AccountDTO[] {
+  static toModel(entity: AccountEntity | null): AccountDTO {
+    const model = new AccountDTO();
+
+    if (!entity) {
+      return model;
+    }
+
+    model.accountId = entity.id;
+    model.username = entity.username;
+    model.roleId = entity.roleId;
+    model.isAction = entity.isActive;
+    model.lastseen = entity.lastSeen;
+    model.createdAt = entity.createdAt;
+    model.updatedAt = entity.updatedAt;
+    return model;
+  }
+
+  static toModels(entities: AccountEntity[] | null): AccountDTO[] {
     if (!entities) return [];
 
     return entities.map((entity) => {

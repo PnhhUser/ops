@@ -28,9 +28,22 @@ export class AccountController {
   async accounts() {
     const accounts = await this.accountService.getAccounts();
 
-    const model = AccountDTO.toModel(accounts);
+    const model = AccountDTO.toModels(accounts);
 
     return responseSerialize(model, 'Successfully fetched account list');
+  }
+
+  // Get account
+  @Get(':id')
+  async account(@Param('id') id: number) {
+    const account = await this.accountService.getAccount(id);
+
+    const model = AccountDTO.toModel(account);
+
+    return responseSerialize(
+      model,
+      'Successfully fetched account ' + model.accountId,
+    );
   }
 
   // Create account

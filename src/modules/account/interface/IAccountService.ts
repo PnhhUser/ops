@@ -5,6 +5,8 @@ import { UpdateAccountDTO } from '../dto/update-account.dto';
 export interface IAccountService {
   getAccounts(): Promise<AccountEntity[] | null>;
 
+  getAccount(accountId: number): Promise<AccountEntity | null>;
+
   addAccount(newAccount: CreateAccountDTO): Promise<void>;
 
   updateAccount(updateAccount: UpdateAccountDTO): Promise<void>;
