@@ -49,17 +49,19 @@ export class AccountController {
   // Create account
   @Post()
   async createAccount(@Body() newAccount: CreateAccountDTO) {
-    await this.accountService.addAccount(newAccount);
+    const created = await this.accountService.addAccount(newAccount);
 
-    return responseSerialize({}, 'New account created successfully');
+    const model = AccountDTO.toModel(created);
+
+    return responseSerialize(model, 'New account created successfully');
   }
 
   // Update account
   @Put()
   async UpdateAccount(@Body() account: UpdateAccountDTO) {
-    await this.accountService.updateAccount(account);
+    const updated = await this.accountService.updateAccount(account);
 
-    return responseSerialize({}, 'Account update successful');
+    return responseSerialize(updated, 'Account update successful');
   }
 
   // Remove account

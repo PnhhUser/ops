@@ -27,9 +27,11 @@ export class PositionService implements IPositionService<PositionEntity> {
       );
     }
 
-    const position = CreatePositionDTO.toEntity(newPosition);
+    const created = CreatePositionDTO.toEntity(newPosition);
 
-    await this.positionRepository.add(position);
+    await this.positionRepository.add(created);
+
+    return created;
   }
 
   async updatePosition(position: UpdatePositionDTO) {
@@ -51,9 +53,11 @@ export class PositionService implements IPositionService<PositionEntity> {
       );
     }
 
-    const newPosition = UpdatePositionDTO.toEntity(position);
+    const updated = UpdatePositionDTO.toEntity(position);
 
-    await this.positionRepository.update(newPosition);
+    await this.positionRepository.update(updated);
+
+    return updated;
   }
 
   async removePosition(positionId: number) {

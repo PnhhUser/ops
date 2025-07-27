@@ -18,7 +18,7 @@ export class PermissionService implements IPermissionService<PermissionEntity> {
     return await this.permissionRepository.getAll();
   }
 
-  async addPermission(newPermission: CreatePermissionDTO): Promise<void> {
+  async addPermission(newPermission: CreatePermissionDTO) {
     const keyExists = await this.permissionRepository.getByKey(
       newPermission.key,
     );
@@ -29,12 +29,14 @@ export class PermissionService implements IPermissionService<PermissionEntity> {
       );
     }
 
-    const permission = CreatePermissionDTO.toEntity(newPermission);
+    const created = CreatePermissionDTO.toEntity(newPermission);
 
-    await this.permissionRepository.add(permission);
+    await this.permissionRepository.add(created);
+
+    return created;
   }
 
-  async updatePermission(updatePermission: UpdatePermissionDTO): Promise<void> {
+  async updatePermission(updatePermission: UpdatePermissionDTO) {
     const permissionExists = await this.permissionRepository.getById(
       updatePermission.permissionId,
     );
@@ -45,9 +47,11 @@ export class PermissionService implements IPermissionService<PermissionEntity> {
       );
     }
 
-    const permission = UpdatePermissionDTO.toEntity(updatePermission);
+    const updated = UpdatePermissionDTO.toEntity(updatePermission);
 
-    await this.permissionRepository.update(permission);
+    await this.permissionRepository.update(updated);
+
+    return updated;
   }
 
   async removePermission(permissionId: number): Promise<void> {

@@ -7,9 +7,9 @@ export interface IAccountService {
 
   getAccount(accountId: number): Promise<AccountEntity | null>;
 
-  addAccount(newAccount: CreateAccountDTO): Promise<void>;
+  addAccount(newAccount: CreateAccountDTO): Promise<AccountEntity>;
 
-  updateAccount(updateAccount: UpdateAccountDTO): Promise<void>;
+  updateAccount(updateAccount: UpdateAccountDTO): Promise<AccountEntity>;
 
   removeAccount(accountId: number): Promise<void>;
 

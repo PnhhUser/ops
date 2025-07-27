@@ -44,6 +44,8 @@ export class AccountService implements IAccountService {
     const create = await CreateAccountDTO.toEntity(dto);
 
     await this.accountRepository.add(create);
+
+    return create;
   }
 
   async updateAccount(dto: UpdateAccountDTO) {
@@ -74,6 +76,8 @@ export class AccountService implements IAccountService {
     const update = await UpdateAccountDTO.toEntity(dto);
 
     await this.accountRepository.update(update);
+
+    return update;
   }
 
   async removeAccount(accountId: number) {

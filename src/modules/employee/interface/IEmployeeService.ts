@@ -5,9 +5,9 @@ import { UpdateEmployeeDTO } from '../dto/update-employee.dto';
 export interface IEmployeeService {
   getEmployees(): Promise<EmployeeEntity[] | null>;
 
-  addEmployee(newEmployee: CreateEmployeeDTO): Promise<void>;
+  addEmployee(newEmployee: CreateEmployeeDTO): Promise<EmployeeEntity>;
 
-  updateEmployee(updateEmployee: UpdateEmployeeDTO): Promise<void>;
+  updateEmployee(updateEmployee: UpdateEmployeeDTO): Promise<EmployeeEntity>;
 
   removeEmployee(employeeId: number): Promise<void>;
 }

@@ -14,6 +14,7 @@ import { IDepartmentService } from './interfaces/IDepartmentService';
 import { responseSerialize } from 'src/common/serializers/response.serializer';
 import { CreateDepartmentDTO } from './dto/create-department.dto';
 import { UpdateDepartmentDTO } from './dto/update-department.dto';
+import { DepartmentDTO } from './dto/department.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('departments')
@@ -27,21 +28,27 @@ export class DepartmentController {
   async departments() {
     const data = await this.departmentService.getDepartments();
 
-    return responseSerialize(data, 'Successfully fetched department list');
+    const model = DepartmentDTO.toModels(data);
+
+    return responseSerialize(model, 'Successfully fetched department list');
   }
 
   @Post()
   async addDepartment(@Body() dto: CreateDepartmentDTO) {
-    await this.departmentService.addDepartment(dto);
+    const created = await this.departmentService.addDepartment(dto);
 
-    return responseSerialize({}, 'New department created successful');
+    const model = DepartmentDTO.toModel(created);
+
+    return responseSerialize(model, 'New department created successful');
   }
 
   @Put()
   async updateDepartment(@Body() dto: UpdateDepartmentDTO) {
-    await this.departmentService.updateDepartment(dto);
+    const updated = await this.departmentService.updateDepartment(dto);
 
-    return responseSerialize({}, 'Department updated successful');
+    const model = DepartmentDTO.toModel(updated);
+
+    return responseSerialize(model, 'Department updated successful');
   }
 
   @Delete(':id')

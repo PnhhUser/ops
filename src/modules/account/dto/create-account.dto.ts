@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsInt,
   IsNotEmpty,
   IsString,
@@ -34,6 +35,9 @@ export class CreateAccountDTO {
   @IsNotEmpty({ message: ErrorMessages.account.PASSWORD_EMPTY })
   password: string;
 
+  @IsBoolean()
+  isActive: boolean;
+
   @Min(1)
   @IsInt()
   roleId: number;
@@ -42,6 +46,7 @@ export class CreateAccountDTO {
     const account = new AccountEntity();
     account.username = dto.username;
     account.password = await bcrypt.hash(dto.password, 10);
+    account.isActive = dto.isActive;
 
     if (dto.roleId) {
       const role = new RoleEntity();

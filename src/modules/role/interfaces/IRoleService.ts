@@ -4,9 +4,9 @@ import { UpdateRoleDTO } from '../dto/update-role.dto';
 export interface IRoleService<T> {
   getRoles(): Promise<T[] | null>;
 
-  addRole(newRole: CreateRoleDTO): Promise<void>;
+  addRole(newRole: CreateRoleDTO): Promise<T>;
 
-  updateRole(updateRole: UpdateRoleDTO): Promise<void>;
+  updateRole(updateRole: UpdateRoleDTO): Promise<T>;
 
   removeRole(roleId: number): Promise<void>;
 }

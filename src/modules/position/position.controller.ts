@@ -31,16 +31,16 @@ export class PositionController {
 
   @Post()
   async addPosition(@Body() position: CreatePositionDTO) {
-    await this.positionService.addPosition(position);
+    const created = await this.positionService.addPosition(position);
 
-    return responseSerialize({}, 'New position created successfully');
+    return responseSerialize(created, 'New position created successfully');
   }
 
   @Put()
   async updatePosition(@Body() position: UpdatePositionDTO) {
-    await this.positionService.updatePosition(position);
+    const updated = await this.positionService.updatePosition(position);
 
-    return responseSerialize({}, 'Position update successful');
+    return responseSerialize(updated, 'Position update successful');
   }
 
   @Delete(':id')

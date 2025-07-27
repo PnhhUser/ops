@@ -73,9 +73,11 @@ export class EmployeeService implements IEmployeeService {
       );
     }
 
-    const emp = CreateEmployeeDTO.toEntity(newEmp);
+    const created = CreateEmployeeDTO.toEntity(newEmp);
 
-    await this.employeeRepository.add(emp);
+    await this.employeeRepository.add(created);
+
+    return created;
   }
 
   async updateEmployee(emp: UpdateEmployeeDTO) {
@@ -131,9 +133,11 @@ export class EmployeeService implements IEmployeeService {
       );
     }
 
-    const newPosition = UpdateEmployeeDTO.toEntity(emp);
+    const updated = UpdateEmployeeDTO.toEntity(emp);
 
-    await this.employeeRepository.update(newPosition);
+    await this.employeeRepository.update(updated);
+
+    return updated;
   }
 
   async removeEmployee(empId: number) {

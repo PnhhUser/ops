@@ -33,16 +33,16 @@ export class RoleController {
 
   @Post()
   async addRole(@Body() newRole: CreateRoleDTO) {
-    await this.roleService.addRole(newRole);
+    const created = await this.roleService.addRole(newRole);
 
-    return responseSerialize({}, 'New role created successfully');
+    return responseSerialize(created, 'New role created successfully');
   }
 
   @Put()
   async updateRole(@Body() updateRole: UpdateRoleDTO) {
-    await this.roleService.updateRole(updateRole);
+    const updated = await this.roleService.updateRole(updateRole);
 
-    return responseSerialize({}, 'Role updated successfully');
+    return responseSerialize(updated, 'Role updated successfully');
   }
 
   @Delete(':id')

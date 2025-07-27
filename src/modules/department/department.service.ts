@@ -17,7 +17,7 @@ export class DepartmentService implements IDepartmentService {
     return await this.departmentRepository.getAll();
   }
 
-  async addDepartment(dto: CreateDepartmentDTO): Promise<void> {
+  async addDepartment(dto: CreateDepartmentDTO): Promise<DepartmentEntity> {
     const exists = await this.departmentRepository.getByName(dto.name);
 
     if (exists) {
@@ -27,9 +27,11 @@ export class DepartmentService implements IDepartmentService {
     const department = CreateDepartmentDTO.toEnity(dto);
 
     await this.departmentRepository.add(department);
+
+    return department;
   }
 
-  async updateDepartment(dto: UpdateDepartmentDTO): Promise<void> {
+  async updateDepartment(dto: UpdateDepartmentDTO): Promise<DepartmentEntity> {
     const department = await this.departmentRepository.getById(
       dto.departmentId,
     );
@@ -47,6 +49,8 @@ export class DepartmentService implements IDepartmentService {
     const updated = UpdateDepartmentDTO.toEnity(dto);
 
     await this.departmentRepository.update(updated);
+
+    return updated;
   }
 
   async removeDepartment(departmentId: number): Promise<void> {

@@ -38,15 +38,17 @@ export class PermissionController {
 
   @Put()
   async updatePermission(@Body() updatePermission: UpdatePermissionDTO) {
-    await this.permissionService.updatePermission(updatePermission);
+    const created =
+      await this.permissionService.updatePermission(updatePermission);
 
-    return responseSerialize({}, 'Permission updated successful');
+    return responseSerialize(created, 'Permission updated successful');
   }
 
   @Post()
   async CreatePermission(@Body() createPermission: CreatePermissionDTO) {
-    await this.permissionService.addPermission(createPermission);
+    const updated =
+      await this.permissionService.addPermission(createPermission);
 
-    return responseSerialize({}, 'New permission created successful');
+    return responseSerialize(updated, 'New permission created successful');
   }
 }

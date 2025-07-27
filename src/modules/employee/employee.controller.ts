@@ -32,16 +32,16 @@ export class EmployeeController {
 
   @Post()
   async createEmployye(@Body() newEmp: CreateEmployeeDTO) {
-    await this.employeeService.addEmployee(newEmp);
+    const created = await this.employeeService.addEmployee(newEmp);
 
-    return responseSerialize({}, 'New Employee created successfully');
+    return responseSerialize(created, 'New Employee created successfully');
   }
 
   @Put()
   async updatePosition(@Body() emp: UpdateEmployeeDTO) {
-    await this.employeeService.updateEmployee(emp);
+    const updated = await this.employeeService.updateEmployee(emp);
 
-    return responseSerialize({}, 'Employee update successful');
+    return responseSerialize(updated, 'Employee update successful');
   }
 
   @Delete(':id')
