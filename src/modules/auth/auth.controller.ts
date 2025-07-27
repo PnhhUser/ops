@@ -58,6 +58,7 @@ export class AuthController {
       maxAge: parseDuration(this.configService.get('jwt.expiresIn')!),
       sameSite: 'lax',
       secure: env === 'production',
+      path: '/',
     });
 
     // Ghi refresh token vào cookie
@@ -66,6 +67,7 @@ export class AuthController {
       maxAge: parseDuration(this.configService.get('jwt.refreshIn')!),
       sameSite: 'lax',
       secure: env === 'production',
+      path: '/',
     });
 
     // Lấy thông tin người dùng đã ghi vào access token
@@ -116,6 +118,7 @@ export class AuthController {
       maxAge: parseDuration(this.configService.get('jwt.expiresIn')!),
       sameSite: 'lax',
       secure: env === 'production',
+      path: '/',
     });
 
     return responseSerialize(
@@ -141,12 +144,14 @@ export class AuthController {
       httpOnly: true,
       sameSite: 'lax',
       secure: env === 'production',
+      path: '/',
     });
 
     res.clearCookie('refresh_token', {
       httpOnly: true,
       sameSite: 'lax',
       secure: env === 'production',
+      path: '/',
     });
 
     return responseSerialize({}, 'Logged out successfully');

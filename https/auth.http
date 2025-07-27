@@ -1,4 +1,6 @@
-@local=http://localhost:3000/api
+# @local=http://localhost:3000/api
+
+@local=https://ops.up.railway.app/api
 @token= access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsIm5hbWUiOiJob2FuZyIsImlhdCI6MTc1MjU0Njk0MywiZXhwIjoxNzUyNTUwNTQzfQ.JbowHxRBMaaoanhINAoGs3GApK1Gck4IxklheDlFD64;
 
 ### 🟢 Login
