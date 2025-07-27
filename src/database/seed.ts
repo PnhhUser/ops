@@ -3,6 +3,12 @@ import { seedDefaultAccount } from './seeds/account.seed';
 import { seedPermission } from './seeds/permission.seed';
 import { seedRoles } from './seeds/role.seed';
 
+// ⚠️ Ngăn không cho seed nếu đang ở production mà thiếu SEED=true
+if (process.env.NODE_ENV === 'production' && process.env.SEED !== 'true') {
+  console.warn('⚠️ Đang ở production, seed bị dừng vì thiếu SEED=true');
+  process.exit(0);
+}
+
 AppDataSource.initialize()
   .then(async (dataSource) => {
     console.log('⚙️  Seeding default data...');
