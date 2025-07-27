@@ -56,7 +56,7 @@ export class AuthController {
     res.cookie(TOKEN_NAME, account.accessToken, {
       httpOnly: true,
       maxAge: parseDuration(this.configService.get('jwt.expiresIn')!),
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: env === 'production',
       path: '/',
     });
@@ -65,7 +65,7 @@ export class AuthController {
     res.cookie(REFRESH_NAME, refreshToken, {
       httpOnly: true,
       maxAge: parseDuration(this.configService.get('jwt.refreshIn')!),
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: env === 'production',
       path: '/',
     });
@@ -116,7 +116,7 @@ export class AuthController {
     res.cookie(TOKEN_NAME, newAccessToken, {
       httpOnly: true,
       maxAge: parseDuration(this.configService.get('jwt.expiresIn')!),
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: env === 'production',
       path: '/',
     });
@@ -142,14 +142,14 @@ export class AuthController {
 
     res.clearCookie(TOKEN_NAME, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: env === 'production',
       path: '/',
     });
 
     res.clearCookie('refresh_token', {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       secure: env === 'production',
       path: '/',
     });
