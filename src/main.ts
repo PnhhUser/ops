@@ -28,7 +28,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.enableCors({
-    origin: ['http://localhost:4200', 'https://ops.up.railway.app'],
+    origin: ['http://localhost:4200', 'https://opsdemo.netlify.app'],
     credentials: true,
   });
 
