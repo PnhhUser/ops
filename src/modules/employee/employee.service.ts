@@ -24,7 +24,7 @@ export class EmployeeService implements IEmployeeService {
   ) {}
 
   async getEmployees() {
-    return await this.employeeRepository.getAll();
+    return this.employeeRepository.getAllWithRelations();
   }
 
   async addEmployee(newEmp: CreateEmployeeDTO) {

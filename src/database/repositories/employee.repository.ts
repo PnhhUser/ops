@@ -28,4 +28,15 @@ export class EmployeeRepository
       relations: ['account'],
     });
   }
+
+  async getAllWithRelations(): Promise<EmployeeEntity[]> {
+    return this.repository.find({
+      relations: {
+        position: {
+          department: true,
+        },
+        account: true,
+      },
+    });
+  }
 }
