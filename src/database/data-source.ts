@@ -28,4 +28,8 @@ export const AppDataSource = new DataSource({
       ? 'dist/database/migrations/*.js'
       : 'src/database/migrations/*.ts',
   ],
+  charset: 'utf8mb4',
+  extra: {
+    charset: 'utf8mb4',
+  },
 });
