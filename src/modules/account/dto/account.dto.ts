@@ -3,7 +3,7 @@ import { AccountEntity } from 'src/database/entities/account.entity';
 export class AccountDTO {
   accountId: number;
   username: string;
-  roleId: number;
+  role: number;
   isAction: boolean;
   lastseen: Date | null;
   createdAt: Date;
@@ -18,7 +18,7 @@ export class AccountDTO {
 
     model.accountId = entity.id;
     model.username = entity.username;
-    model.roleId = entity.roleId;
+    model.role = entity.roleId;
     model.isAction = entity.isActive;
     model.lastseen = entity.lastSeen;
     model.createdAt = entity.createdAt;
@@ -33,7 +33,7 @@ export class AccountDTO {
       const model = new AccountDTO();
       model.accountId = entity.id;
       model.username = entity.username;
-      model.roleId = entity.roleId;
+      model.role = entity.roleId;
       model.isAction = entity.isActive;
       model.lastseen = entity.lastSeen;
       model.createdAt = entity.createdAt;

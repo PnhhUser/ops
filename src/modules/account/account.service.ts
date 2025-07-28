@@ -35,7 +35,7 @@ export class AccountService implements IAccountService {
       );
     }
 
-    const role = await this.RoleRepository.getById(dto.roleId);
+    const role = await this.RoleRepository.getById(dto.role);
 
     if (!role) {
       throw ExceptionSerializer.badRequest('This role does not exist');
@@ -67,13 +67,19 @@ export class AccountService implements IAccountService {
       );
     }
 
-    const role = await this.RoleRepository.getById(dto.roleId);
+    const role = await this.RoleRepository.getById(dto.role);
 
     if (!role) {
       throw ExceptionSerializer.badRequest('This role does not exist');
     }
 
+    // check pass nếu nó là ''
+
     const update = await UpdateAccountDTO.toEntity(dto);
+
+    if (!dto.password || dto.password.trim() === '') {
+      update.password = existedAccount.password;
+    }
 
     await this.accountRepository.update(update);
 

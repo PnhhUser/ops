@@ -36,21 +36,21 @@ export class CreateAccountDTO {
   password: string;
 
   @IsBoolean()
-  isActive: boolean;
+  active: boolean;
 
   @Min(1)
   @IsInt()
-  roleId: number;
+  role: number;
 
   static async toEntity(dto: CreateAccountDTO): Promise<AccountEntity> {
     const account = new AccountEntity();
     account.username = dto.username;
     account.password = await bcrypt.hash(dto.password, 10);
-    account.isActive = dto.isActive;
+    account.isActive = dto.active;
 
-    if (dto.roleId) {
+    if (dto.role) {
       const role = new RoleEntity();
-      role.id = dto.roleId;
+      role.id = dto.role;
       account.role = role;
     }
 

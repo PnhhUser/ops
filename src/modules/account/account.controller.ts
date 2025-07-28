@@ -40,10 +40,7 @@ export class AccountController {
 
     const model = AccountDTO.toModel(account);
 
-    return responseSerialize(
-      model,
-      'Successfully fetched account ' + model.accountId,
-    );
+    return responseSerialize(model, 'Successfully fetched account ');
   }
 
   // Create account
