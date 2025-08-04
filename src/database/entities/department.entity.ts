@@ -13,6 +13,9 @@ export class DepartmentEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
+  @Column({ type: 'varchar', length: 50, unique: true })
+  key: string;
+
   @Column({ unique: true })
   name: string;
 

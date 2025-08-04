@@ -35,7 +35,7 @@ export class AccountService implements IAccountService {
       );
     }
 
-    const role = await this.RoleRepository.getById(dto.role);
+    const role = await this.RoleRepository.getById(dto.roleId);
 
     if (!role) {
       throw ExceptionSerializer.badRequest('This role does not exist');
@@ -67,7 +67,7 @@ export class AccountService implements IAccountService {
       );
     }
 
-    const role = await this.RoleRepository.getById(dto.role);
+    const role = await this.RoleRepository.getById(dto.roleId);
 
     if (!role) {
       throw ExceptionSerializer.badRequest('This role does not exist');

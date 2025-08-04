@@ -14,7 +14,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
 import { CreateAccountDTO } from './dto/create-account.dto';
 import { UpdateAccountDTO } from './dto/update-account.dto';
 import { IAccountService } from './interface/IAccountService';
-import { AccountDTO } from './dto/account.dto';
+import { AccountModel } from './account.model';
 
 @UseGuards(JwtAuthGuard)
 @Controller('accounts')
@@ -28,7 +28,7 @@ export class AccountController {
   async accounts() {
     const accounts = await this.accountService.getAccounts();
 
-    const model = AccountDTO.toModels(accounts);
+    const model = AccountModel.toModels(accounts);
 
     return responseSerialize(model, 'Successfully fetched account list');
   }
@@ -38,7 +38,7 @@ export class AccountController {
   async account(@Param('id') id: number) {
     const account = await this.accountService.getAccount(id);
 
-    const model = AccountDTO.toModel(account);
+    const model = AccountModel.toModel(account);
 
     return responseSerialize(model, 'Successfully fetched account ');
   }
@@ -48,7 +48,7 @@ export class AccountController {
   async createAccount(@Body() newAccount: CreateAccountDTO) {
     const created = await this.accountService.addAccount(newAccount);
 
-    const model = AccountDTO.toModel(created);
+    const model = AccountModel.toModel(created);
 
     return responseSerialize(model, 'New account created successfully');
   }
@@ -58,7 +58,9 @@ export class AccountController {
   async UpdateAccount(@Body() account: UpdateAccountDTO) {
     const updated = await this.accountService.updateAccount(account);
 
-    return responseSerialize(updated, 'Account update successful');
+    const model = AccountModel.toModel(updated);
+
+    return responseSerialize(model, 'Account update successful');
   }
 
   // Remove account

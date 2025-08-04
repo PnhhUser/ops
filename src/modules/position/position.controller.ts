@@ -14,6 +14,7 @@ import {
 import { CreatePositionDTO } from './dto/create-position.dto';
 import { responseSerialize } from 'src/common/serializers/response.serializer';
 import { UpdatePositionDTO } from './dto/update-position.dto';
+import { PositionModel } from './position.model';
 
 @UseGuards(JwtAuthGuard)
 @Controller('positions')
@@ -26,21 +27,28 @@ export class PositionController {
   @Get()
   async positions() {
     const data = await this.positionService.getPositions();
-    return responseSerialize(data, 'Successfully fetched position list');
+
+    const models = PositionModel.toModels(data);
+
+    return responseSerialize(models, 'Successfully fetched position list');
   }
 
   @Post()
   async addPosition(@Body() position: CreatePositionDTO) {
     const created = await this.positionService.addPosition(position);
 
-    return responseSerialize(created, 'New position created successfully');
+    const model = PositionModel.toModel(created);
+
+    return responseSerialize(model, 'New position created successfully');
   }
 
   @Put()
   async updatePosition(@Body() position: UpdatePositionDTO) {
     const updated = await this.positionService.updatePosition(position);
 
-    return responseSerialize(updated, 'Position update successful');
+    const model = PositionModel.toModel(updated);
+
+    return responseSerialize(model, 'Position update successful');
   }
 
   @Delete(':id')

@@ -14,6 +14,7 @@ import { responseSerialize } from 'src/common/serializers/response.serializer';
 import { CreateEmployeeDTO } from './dto/create-employee.dto';
 import { UpdateEmployeeDTO } from './dto/update-employee.dto';
 import { IEmployeeService } from './interface/IEmployeeService';
+import { EmployeeModel } from './employee.model';
 
 @UseGuards(JwtAuthGuard)
 @Controller('employees')
@@ -27,21 +28,27 @@ export class EmployeeController {
   async employees() {
     const data = await this.employeeService.getEmployees();
 
-    return responseSerialize(data, 'Successfully fetched employee list');
+    const models = EmployeeModel.toModels(data);
+
+    return responseSerialize(models, 'Successfully fetched employee list');
   }
 
   @Post()
   async createEmployye(@Body() newEmp: CreateEmployeeDTO) {
     const created = await this.employeeService.addEmployee(newEmp);
 
-    return responseSerialize(created, 'New Employee created successfully');
+    const model = EmployeeModel.toModel(created);
+
+    return responseSerialize(model, 'New Employee created successfully');
   }
 
   @Put()
   async updatePosition(@Body() emp: UpdateEmployeeDTO) {
     const updated = await this.employeeService.updateEmployee(emp);
 
-    return responseSerialize(updated, 'Employee update successful');
+    const model = EmployeeModel.toModel(updated);
+
+    return responseSerialize(model, 'Employee update successful');
   }
 
   @Delete(':id')

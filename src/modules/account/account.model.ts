@@ -1,16 +1,16 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
 
-export class AccountDTO {
+export class AccountModel {
   accountId: number;
   username: string;
-  role: number;
-  isAction: boolean;
+  roleId: number;
+  isActive: boolean;
   lastseen: Date | null;
   createdAt: Date;
   updatedAt: Date;
 
-  static toModel(entity: AccountEntity | null): AccountDTO {
-    const model = new AccountDTO();
+  static toModel(entity: AccountEntity | null): AccountModel {
+    const model = new AccountModel();
 
     if (!entity) {
       return model;
@@ -18,23 +18,23 @@ export class AccountDTO {
 
     model.accountId = entity.id;
     model.username = entity.username;
-    model.role = entity.roleId;
-    model.isAction = entity.isActive;
+    model.roleId = entity.roleId;
+    model.isActive = entity.isActive;
     model.lastseen = entity.lastSeen;
     model.createdAt = entity.createdAt;
     model.updatedAt = entity.updatedAt;
     return model;
   }
 
-  static toModels(entities: AccountEntity[] | null): AccountDTO[] {
+  static toModels(entities: AccountEntity[] | null): AccountModel[] {
     if (!entities) return [];
 
     return entities.map((entity) => {
-      const model = new AccountDTO();
+      const model = new AccountModel();
       model.accountId = entity.id;
       model.username = entity.username;
-      model.role = entity.roleId;
-      model.isAction = entity.isActive;
+      model.roleId = entity.roleId;
+      model.isActive = entity.isActive;
       model.lastseen = entity.lastSeen;
       model.createdAt = entity.createdAt;
       model.updatedAt = entity.updatedAt;
