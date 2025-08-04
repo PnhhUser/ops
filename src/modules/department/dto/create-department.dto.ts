@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 import { DepartmentEntity } from 'src/database/entities/department.entity';
 
 export class CreateDepartmentDTO {
@@ -6,7 +6,9 @@ export class CreateDepartmentDTO {
   @IsNotEmpty()
   name: string;
 
+  @IsOptional()
   @IsString()
+  @Length(0, 255)
   description: string | null;
 
   @IsString()
