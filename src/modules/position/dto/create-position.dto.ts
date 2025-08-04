@@ -15,13 +15,18 @@ export class CreatePositionDTO {
   @IsNumber({}, { message: ErrorMessages.position.BASE_SALARY_INVALID })
   baseSalary: number | null;
 
+  @IsString()
+  @IsNotEmpty()
+  key: string;
+
   static toEntity(dto: CreatePositionDTO): PositionEntity {
-    const position = new PositionEntity();
+    const entity = new PositionEntity();
 
-    position.name = dto.name;
-    position.description = !dto.description?.trim() ? null : dto.description;
-    position.baseSalary = dto.baseSalary;
+    entity.name = dto.name;
+    entity.key = dto.key;
+    entity.description = !dto.description?.trim() ? null : dto.description;
+    entity.baseSalary = dto.baseSalary;
 
-    return position;
+    return entity;
   }
 }

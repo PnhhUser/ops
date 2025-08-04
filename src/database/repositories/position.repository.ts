@@ -18,4 +18,8 @@ export class PositionRepository
   async getByName(name: string): Promise<PositionEntity | null> {
     return await this.repository.findOneBy({ name });
   }
+
+  async getByKey(key: string): Promise<PositionEntity | null> {
+    return await this.repository.findOneBy({ key });
+  }
 }

@@ -17,21 +17,36 @@ export class DepartmentService implements IDepartmentService {
     return await this.departmentRepository.getAll();
   }
 
-  async addDepartment(dto: CreateDepartmentDTO): Promise<DepartmentEntity> {
-    const exists = await this.departmentRepository.getByName(dto.name);
+  async addDepartment(
+    dto: CreateDepartmentDTO,
+  ): Promise<DepartmentEntity | null> {
+    const [existName, existKey] = await Promise.all([
+      this.departmentRepository.getByName(dto.name),
+      this.departmentRepository.getByKey(dto.key),
+    ]);
 
-    if (exists) {
-      throw ExceptionSerializer.conflict('This department already exists');
+    if (existName) {
+      throw ExceptionSerializer.conflict(
+        `Department name '${existName.name}' already exists`,
+      );
+    }
+
+    if (existKey) {
+      throw ExceptionSerializer.conflict(
+        `Department key '${existKey.key}' already exists`,
+      );
     }
 
     const department = CreateDepartmentDTO.toEnity(dto);
 
     await this.departmentRepository.add(department);
 
-    return department;
+    return await this.departmentRepository.getById(department.id);
   }
 
-  async updateDepartment(dto: UpdateDepartmentDTO): Promise<DepartmentEntity> {
+  async updateDepartment(
+    dto: UpdateDepartmentDTO,
+  ): Promise<DepartmentEntity | null> {
     const department = await this.departmentRepository.getById(
       dto.departmentId,
     );
@@ -42,15 +57,20 @@ export class DepartmentService implements IDepartmentService {
 
     const duplicate = await this.departmentRepository.getByName(dto.name);
 
-    if (duplicate && duplicate.id !== dto.departmentId) {
-      throw ExceptionSerializer.conflict('This department already exists');
+    if (duplicate) {
+      const isSameNameButDifferentId = duplicate.id !== dto.departmentId;
+      const isSameKey = duplicate.key === dto.key;
+
+      if (isSameNameButDifferentId || isSameKey) {
+        throw ExceptionSerializer.conflict('This department already exists');
+      }
     }
 
     const updated = UpdateDepartmentDTO.toEnity(dto);
 
     await this.departmentRepository.update(updated);
 
-    return updated;
+    return await this.departmentRepository.getById(updated.id);
   }
 
   async removeDepartment(departmentId: number): Promise<void> {

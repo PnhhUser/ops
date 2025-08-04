@@ -19,11 +19,20 @@ export class PositionService implements IPositionService<PositionEntity> {
   }
 
   async addPosition(newPosition: CreatePositionDTO) {
-    const existed = await this.positionRepository.getByName(newPosition.name);
+    const [existName, existKey] = await Promise.all([
+      this.positionRepository.getByName(newPosition.name),
+      this.positionRepository.getByKey(newPosition.key),
+    ]);
 
-    if (existed) {
+    if (existName) {
       throw ExceptionSerializer.conflict(
-        ErrorMessages.position.POSITION_EXISTS,
+        `Position name '${existName.name}' already exists`,
+      );
+    }
+
+    if (existKey) {
+      throw ExceptionSerializer.conflict(
+        `Position key '${existKey.key}' already exists`,
       );
     }
 
@@ -31,11 +40,11 @@ export class PositionService implements IPositionService<PositionEntity> {
 
     await this.positionRepository.add(created);
 
-    return created;
+    return await this.positionRepository.getById(created.id);
   }
 
-  async updatePosition(position: UpdatePositionDTO) {
-    const existed = await this.positionRepository.getById(position.positionId);
+  async updatePosition(dto: UpdatePositionDTO) {
+    const existed = await this.positionRepository.getById(dto.positionId);
 
     if (!existed) {
       throw ExceptionSerializer.notFound(
@@ -43,21 +52,22 @@ export class PositionService implements IPositionService<PositionEntity> {
       );
     }
 
-    const duplicatedUsername = await this.positionRepository.getByName(
-      position.name,
-    );
+    const duplicate = await this.positionRepository.getByName(dto.name);
 
-    if (duplicatedUsername && duplicatedUsername.id !== position.positionId) {
-      throw ExceptionSerializer.conflict(
-        ErrorMessages.position.POSITION_EXISTS,
-      );
+    if (duplicate) {
+      const isSameNameButDifferentId = duplicate.id !== dto.positionId;
+      const isSameKey = duplicate.key === dto.key;
+
+      if (isSameNameButDifferentId || isSameKey) {
+        throw ExceptionSerializer.conflict('This position already exists');
+      }
     }
 
-    const updated = UpdatePositionDTO.toEntity(position);
+    const updated = UpdatePositionDTO.toEntity(dto);
 
     await this.positionRepository.update(updated);
 
-    return updated;
+    return await this.positionRepository.getById(updated.id);
   }
 
   async removePosition(positionId: number) {

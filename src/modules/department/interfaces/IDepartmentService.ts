@@ -5,9 +5,9 @@ import { UpdateDepartmentDTO } from '../dto/update-department.dto';
 export interface IDepartmentService {
   getDepartments(): Promise<DepartmentEntity[] | null>;
 
-  addDepartment(dto: CreateDepartmentDTO): Promise<DepartmentEntity>;
+  addDepartment(dto: CreateDepartmentDTO): Promise<DepartmentEntity | null>;
 
-  updateDepartment(dto: UpdateDepartmentDTO): Promise<DepartmentEntity>;
+  updateDepartment(dto: UpdateDepartmentDTO): Promise<DepartmentEntity | null>;
 
   removeDepartment(departmentId: number): Promise<void>;
 }

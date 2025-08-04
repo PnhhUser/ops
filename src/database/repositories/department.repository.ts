@@ -19,4 +19,8 @@ export class DepartmentRepository
   async getByName(name: string): Promise<DepartmentEntity | null> {
     return await this.repository.findOneBy({ name });
   }
+
+  async getByKey(key: string): Promise<DepartmentEntity | null> {
+    return await this.repository.findOneBy({ key });
+  }
 }
