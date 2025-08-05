@@ -15,6 +15,21 @@ export class PositionRepository
     super(repo);
   }
 
+  override async getAll(): Promise<PositionEntity[]> {
+    return this.repository.find({
+      relations: {
+        department: true,
+      },
+    });
+  }
+
+  override async getById(id: number): Promise<PositionEntity | null> {
+    return this.repository.findOne({
+      where: { id },
+      relations: { department: true },
+    });
+  }
+
   async getByName(name: string): Promise<PositionEntity | null> {
     return await this.repository.findOneBy({ name });
   }
