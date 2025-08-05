@@ -59,9 +59,8 @@ export class DepartmentService implements IDepartmentService {
 
     if (duplicate) {
       const isSameNameButDifferentId = duplicate.id !== dto.departmentId;
-      const isSameKey = duplicate.key === dto.key;
 
-      if (isSameNameButDifferentId || isSameKey) {
+      if (isSameNameButDifferentId) {
         throw ExceptionSerializer.conflict('This department already exists');
       }
     }

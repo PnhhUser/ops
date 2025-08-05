@@ -56,9 +56,8 @@ export class PositionService implements IPositionService<PositionEntity> {
 
     if (duplicate) {
       const isSameNameButDifferentId = duplicate.id !== dto.positionId;
-      const isSameKey = duplicate.key === dto.key;
 
-      if (isSameNameButDifferentId || isSameKey) {
+      if (isSameNameButDifferentId) {
         throw ExceptionSerializer.conflict('This position already exists');
       }
     }
