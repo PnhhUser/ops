@@ -29,13 +29,17 @@ export class EmployeeService implements IEmployeeService {
 
   async addEmployee(newEmp: CreateEmployeeDTO) {
     const emailExisted = await this.employeeRepository.getByEmail(newEmp.email);
+    let created = new EmployeeEntity();
 
     // check mail trùng lặp
     if (emailExisted) {
       throw ExceptionSerializer.conflict(ErrorMessages.employee.EMAIL_EXISTS);
     }
 
-    if (newEmp.accountId) {
+    if (!newEmp.accountId || !newEmp.positionId) {
+      created = CreateEmployeeDTO.toEntity(newEmp);
+    } else {
+      // account
       const accountExisted = await this.accountRepository.getById(
         newEmp.accountId,
       );
@@ -53,35 +57,29 @@ export class EmployeeService implements IEmployeeService {
           ErrorMessages.account.ACOUNT_ALREADY_USE,
         );
       }
-    }
 
-    // check positionId đầu vào
-    if (!newEmp.positionId) {
-      throw ExceptionSerializer.badRequest(
-        ErrorMessages.position.POSITION_NOT_FOUND,
+      // position
+      const positionExisted = await this.positionRepository.getById(
+        newEmp.positionId,
       );
+
+      // kiểm tra position có hay không
+      if (!positionExisted) {
+        throw ExceptionSerializer.notFound(
+          ErrorMessages.position.POSITION_NOT_FOUND,
+        );
+      }
+      created = CreateEmployeeDTO.toEntity(newEmp);
     }
-
-    const positionExisted = await this.positionRepository.getById(
-      newEmp.positionId,
-    );
-
-    // kiểm tra position có hay không
-    if (!positionExisted) {
-      throw ExceptionSerializer.notFound(
-        ErrorMessages.position.POSITION_NOT_FOUND,
-      );
-    }
-
-    const created = CreateEmployeeDTO.toEntity(newEmp);
 
     await this.employeeRepository.add(created);
 
-    return created;
+    return this.employeeRepository.getById(created.id);
   }
 
   async updateEmployee(emp: UpdateEmployeeDTO) {
     const existed = await this.employeeRepository.getById(emp.employeeId);
+    let updated = new EmployeeEntity();
 
     if (!existed) {
       throw ExceptionSerializer.notFound(
@@ -97,7 +95,10 @@ export class EmployeeService implements IEmployeeService {
       );
     }
 
-    if (emp.accountId) {
+    if (!emp.accountId || !emp.positionId) {
+      updated = UpdateEmployeeDTO.toEntity(emp);
+    } else {
+      // account
       const accountExisted = await this.accountRepository.getById(
         emp.accountId,
       );
@@ -115,29 +116,30 @@ export class EmployeeService implements IEmployeeService {
           ErrorMessages.account.ACOUNT_ALREADY_USE,
         );
       }
-    }
 
-    if (!emp.positionId) {
-      throw ExceptionSerializer.notFound(
-        ErrorMessages.position.POSITION_NOT_FOUND,
+      // position
+      if (!emp.positionId) {
+        throw ExceptionSerializer.notFound(
+          ErrorMessages.position.POSITION_NOT_FOUND,
+        );
+      }
+
+      const positionExisted = await this.positionRepository.getById(
+        emp.positionId,
       );
+
+      if (!positionExisted) {
+        throw ExceptionSerializer.notFound(
+          ErrorMessages.position.POSITION_NOT_FOUND,
+        );
+      }
+
+      updated = UpdateEmployeeDTO.toEntity(emp);
     }
-
-    const positionExisted = await this.positionRepository.getById(
-      emp.positionId,
-    );
-
-    if (!positionExisted) {
-      throw ExceptionSerializer.notFound(
-        ErrorMessages.position.POSITION_NOT_FOUND,
-      );
-    }
-
-    const updated = UpdateEmployeeDTO.toEntity(emp);
 
     await this.employeeRepository.update(updated);
 
-    return updated;
+    return this.employeeRepository.getById(updated.id);
   }
 
   async removeEmployee(empId: number) {
@@ -175,5 +177,9 @@ export class EmployeeService implements IEmployeeService {
     }
 
     return true;
+  }
+
+  async accountsAvailable(): Promise<AccountEntity[]> {
+    return await this.employeeRepository.getAvailableAccounts();
   }
 }

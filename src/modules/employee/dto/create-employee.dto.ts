@@ -10,9 +10,8 @@ import {
   IsPhoneNumber,
   Matches,
   IsOptional,
-  IsISO8601,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { Gender } from 'src/common/constants/enums/employee.enum';
 import { ErrorMessages } from 'src/common/constants/error-message.constant';
 import { EmployeeEntity } from 'src/database/entities/employee.entity';
@@ -33,6 +32,9 @@ export class CreateEmployeeDTO {
   @IsNotEmpty({ message: ErrorMessages.employee.EMAIL_EMPTY })
   email: string;
 
+  @Transform(({ value }: { value: string | null }) =>
+    value === '' ? null : value,
+  )
   @IsOptional()
   @IsPhoneNumber('VN', { message: ErrorMessages.employee.PHONE_INVALID })
   @IsString({ message: ErrorMessages.employee.PHONE_NOT_STRING })
@@ -46,8 +48,10 @@ export class CreateEmployeeDTO {
   gender: Gender;
 
   @IsOptional()
+  @Transform(({ value }: { value: string | null }) =>
+    value === '' || value === null ? null : value,
+  )
   @Type(() => Date)
-  @IsISO8601()
   @IsDate({ message: ErrorMessages.employee.DOB_INVALID })
   dateOfBirth: Date | null;
 
@@ -57,6 +61,9 @@ export class CreateEmployeeDTO {
   positionId: number | null;
 
   @IsOptional()
+  @Transform(({ value }: { value: string | null }) =>
+    value === '' || value === null ? null : value,
+  )
   @Type(() => Date)
   @IsDate({ message: ErrorMessages.employee.START_DATE_INVALID })
   startDate: Date | null;

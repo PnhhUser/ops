@@ -1,7 +1,7 @@
 export interface IBaseRepository<T> {
   getById(id: number): Promise<T | null>;
 
-  getAll(): Promise<T[] | null>;
+  getAll(): Promise<T[]>;
 
   add(entity: T): Promise<void>;
 

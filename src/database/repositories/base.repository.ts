@@ -12,7 +12,7 @@ export class BaseRepository<T extends { id: number }>
     return await this.repository.findOneBy({ id } as FindOptionsWhere<T>);
   }
 
-  async getAll(): Promise<T[] | null> {
+  async getAll(): Promise<T[]> {
     return await this.repository.find();
   }
 

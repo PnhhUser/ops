@@ -57,4 +57,23 @@ export class EmployeeController {
 
     return responseSerialize({}, 'Employee remove successful');
   }
+
+  @Get('available')
+  async accountsAvailable() {
+    const accounts = await this.employeeService.accountsAvailable();
+
+    let model: { name: string; id: number }[] = [];
+
+    model = accounts.map((account) => {
+      return {
+        name: account.username,
+        id: account.id,
+      };
+    });
+
+    return responseSerialize(
+      model,
+      'Available accounts retrieved successfully',
+    );
+  }
 }

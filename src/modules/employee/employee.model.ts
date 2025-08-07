@@ -3,7 +3,7 @@ import { EmployeeEntity } from 'src/database/entities/employee.entity';
 
 export class EmployeeModel {
   employeeId: number;
-  fullname: string;
+  fullName: string;
   email: string;
   phoneNumber: string | null;
   address: string | null;
@@ -25,7 +25,7 @@ export class EmployeeModel {
     }
 
     model.employeeId = entity.id;
-    model.fullname = entity.fullName;
+    model.fullName = entity.fullName;
     model.email = entity.email;
     model.address = entity.address;
     model.phoneNumber = entity.phoneNumber;
@@ -53,7 +53,7 @@ export class EmployeeModel {
       const model = new EmployeeModel();
 
       model.employeeId = entity.id;
-      model.fullname = entity.fullName;
+      model.fullName = entity.fullName;
       model.email = entity.email;
       model.address = entity.address;
       model.phoneNumber = entity.phoneNumber;
@@ -64,6 +64,7 @@ export class EmployeeModel {
 
       model.positionName = entity.position?.name ?? '';
       model.accountName = entity.account?.username ?? '';
+      model.departmentName = entity.position?.department?.name ?? '';
 
       model.createAt = entity.createdAt;
       model.updateAt = entity.updatedAt;

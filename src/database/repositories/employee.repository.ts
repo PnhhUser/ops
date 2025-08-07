@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { BaseRepository } from './base.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EmployeeEntity } from '../entities/employee.entity';
 import { IEmployeeRepository } from './interfaces/IEmployeeRepository';
+import { AccountEntity } from '../entities/account.entity';
+import { IAccountRepository } from './interfaces/IAccountRepository';
 @Injectable()
 export class EmployeeRepository
   extends BaseRepository<EmployeeEntity>
@@ -11,8 +13,17 @@ export class EmployeeRepository
 {
   constructor(
     @InjectRepository(EmployeeEntity) repo: Repository<EmployeeEntity>,
+    @Inject('IAccountRepository')
+    private readonly accountRepo: IAccountRepository<AccountEntity>,
   ) {
     super(repo);
+  }
+
+  override async getById(id: number): Promise<EmployeeEntity | null> {
+    return await this.repository.findOne({
+      where: { id },
+      relations: { account: true, position: { department: true } },
+    });
   }
 
   async getByEmail(email: string): Promise<EmployeeEntity | null> {
@@ -38,5 +49,21 @@ export class EmployeeRepository
         account: true,
       },
     });
+  }
+
+  async getAvailableAccounts(): Promise<AccountEntity[]> {
+    const allAccounts = await this.accountRepo.getAll();
+
+    const employees = await this.repository.find({
+      relations: { account: true },
+    });
+
+    const usedAccountIds = new Set(
+      employees
+        .map((e) => e.account?.id)
+        .filter((id): id is number => id !== null && id !== undefined),
+    );
+
+    return allAccounts.filter((account) => !usedAccountIds.has(account.id));
   }
 }
