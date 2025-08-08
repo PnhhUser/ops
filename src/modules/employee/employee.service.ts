@@ -182,4 +182,8 @@ export class EmployeeService implements IEmployeeService {
   async accountsAvailable(): Promise<AccountEntity[]> {
     return await this.employeeRepository.getAvailableAccounts();
   }
+
+  async availableAccountsById(empId: number): Promise<AccountEntity[]> {
+    return await this.employeeRepository.getAvailableAccountsById(empId);
+  }
 }

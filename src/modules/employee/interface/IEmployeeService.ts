@@ -15,4 +15,6 @@ export interface IEmployeeService {
   removeEmployee(employeeId: number): Promise<void>;
 
   accountsAvailable(): Promise<AccountEntity[]>;
+
+  availableAccountsById(empId: number): Promise<AccountEntity[]>;
 }

@@ -9,4 +9,6 @@ export interface IEmployeeRepository<T> extends IBaseRepository<T> {
   getAllWithRelations(): Promise<T[]>;
 
   getAvailableAccounts(): Promise<AccountEntity[]>;
+
+  getAvailableAccountsById(employeeId: number): Promise<AccountEntity[]>;
 }

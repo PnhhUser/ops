@@ -6,6 +6,10 @@
 GET {{local}}/employees
 Cookie: {{token}}
 
+### -----------------
+GET {{local}}/employees/available/19
+Cookie: {{token}}
+
 
 #---------------  TEST THÊM NHÂN VIÊN -------------------#
 

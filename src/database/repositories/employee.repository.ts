@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { BaseRepository } from './base.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { EmployeeEntity } from '../entities/employee.entity';
 import { IEmployeeRepository } from './interfaces/IEmployeeRepository';
 import { AccountEntity } from '../entities/account.entity';
@@ -65,5 +65,35 @@ export class EmployeeRepository
     );
 
     return allAccounts.filter((account) => !usedAccountIds.has(account.id));
+  }
+
+  async getAvailableAccountsById(employeeId: number): Promise<AccountEntity[]> {
+    let currentAccountId: number | null = null;
+    if (employeeId) {
+      const currentEmployee = await this.repository.findOne({
+        where: { id: employeeId },
+        relations: ['account'],
+      });
+      currentAccountId = currentEmployee?.account?.id || null;
+    }
+
+    const accounts = await this.accountRepo.getAll();
+
+    const empWithAccounts = await this.repository.find({
+      where: { account: Not(IsNull()) },
+      relations: {
+        account: true,
+      },
+    });
+
+    const usedAccountIds = new Set(empWithAccounts.map((e) => e.account?.id));
+
+    const availableAccounts = accounts.filter(
+      (account) =>
+        !usedAccountIds.has(account.id) ||
+        (currentAccountId !== null && account.id === currentAccountId),
+    );
+
+    return availableAccounts;
   }
 }

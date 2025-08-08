@@ -76,4 +76,23 @@ export class EmployeeController {
       'Available accounts retrieved successfully',
     );
   }
+
+  @Get('available/:id')
+  async accountsAvailableById(@Param('id') id: number) {
+    const accounts = await this.employeeService.availableAccountsById(id);
+
+    let model: { name: string; id: number }[] = [];
+
+    model = accounts.map((account) => {
+      return {
+        name: account.username,
+        id: account.id,
+      };
+    });
+
+    return responseSerialize(
+      model,
+      'Available accounts retrieved successfully',
+    );
+  }
 }
