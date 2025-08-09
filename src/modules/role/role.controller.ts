@@ -15,6 +15,7 @@ import { responseSerialize } from 'src/common/serializers/response.serializer';
 import { UpdateRoleDTO } from './dto/update-role.dto';
 import { RoleEntity } from 'src/database/entities/role.entity';
 import { IRoleService } from './interfaces/IRoleService';
+import { RoleModel } from './role.model';
 
 @UseGuards(JwtAuthGuard)
 @Controller('roles')
@@ -28,21 +29,27 @@ export class RoleController {
   async getRoles() {
     const data = await this.roleService.getRoles();
 
-    return responseSerialize(data, 'Successfully fetched role list');
+    const models = RoleModel.toModels(data);
+
+    return responseSerialize(models, 'Successfully fetched role list');
   }
 
   @Post()
   async addRole(@Body() newRole: CreateRoleDTO) {
     const created = await this.roleService.addRole(newRole);
 
-    return responseSerialize(created, 'New role created successfully');
+    const model = RoleModel.toModel(created);
+
+    return responseSerialize(model, 'New role created successfully');
   }
 
   @Put()
   async updateRole(@Body() updateRole: UpdateRoleDTO) {
     const updated = await this.roleService.updateRole(updateRole);
 
-    return responseSerialize(updated, 'Role updated successfully');
+    const model = RoleModel.toModel(updated);
+
+    return responseSerialize(model, 'Role updated successfully');
   }
 
   @Delete(':id')

@@ -14,6 +14,7 @@ import { JwtAuthGuard } from 'src/common/guards/jwt.guard';
 import { responseSerialize } from 'src/common/serializers/response.serializer';
 import { UpdatePermissionDTO } from './dto/update-permission.dto';
 import { CreatePermissionDTO } from './dto/create-permission.dto';
+import { PermissionModel } from './permission.model';
 
 @UseGuards(JwtAuthGuard)
 @Controller('permissions')
@@ -26,7 +27,10 @@ export class PermissionController {
   @Get()
   async getPermissions() {
     const data = await this.permissionService.getPermissions();
-    return responseSerialize(data, 'Successfully fetched permission list');
+
+    const model = PermissionModel.toModels(data);
+
+    return responseSerialize(model, 'Successfully fetched permission list');
   }
 
   @Delete(':id')
@@ -38,17 +42,21 @@ export class PermissionController {
 
   @Put()
   async updatePermission(@Body() updatePermission: UpdatePermissionDTO) {
-    const created =
+    const updated =
       await this.permissionService.updatePermission(updatePermission);
 
-    return responseSerialize(created, 'Permission updated successful');
+    const model = PermissionModel.toModel(updated);
+
+    return responseSerialize(model, 'Permission updated successful');
   }
 
   @Post()
   async CreatePermission(@Body() createPermission: CreatePermissionDTO) {
-    const updated =
+    const created =
       await this.permissionService.addPermission(createPermission);
 
-    return responseSerialize(updated, 'New permission created successful');
+    const model = PermissionModel.toModel(created);
+
+    return responseSerialize(model, 'New permission created successful');
   }
 }

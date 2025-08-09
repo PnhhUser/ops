@@ -13,7 +13,7 @@ export class DepartmentService implements IDepartmentService {
     private readonly departmentRepository: IDepartmentRepository<DepartmentEntity>,
   ) {}
 
-  async getDepartments(): Promise<DepartmentEntity[] | null> {
+  async getDepartments(): Promise<DepartmentEntity[]> {
     return await this.departmentRepository.getAll();
   }
 
@@ -63,6 +63,12 @@ export class DepartmentService implements IDepartmentService {
       if (isSameNameButDifferentId) {
         throw ExceptionSerializer.conflict('This department already exists');
       }
+    }
+
+    const keyExists = await this.departmentRepository.getByKey(dto.key);
+
+    if (keyExists && keyExists.id !== dto.departmentId) {
+      throw ExceptionSerializer.conflict('This department already exists');
     }
 
     const updated = UpdateDepartmentDTO.toEnity(dto);

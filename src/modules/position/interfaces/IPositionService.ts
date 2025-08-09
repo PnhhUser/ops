@@ -2,7 +2,7 @@ import { CreatePositionDTO } from '../dto/create-position.dto';
 import { UpdatePositionDTO } from '../dto/update-position.dto';
 
 export interface IPositionService<T> {
-  getPositions(): Promise<T[] | null>;
+  getPositions(): Promise<T[]>;
 
   addPosition(newPosition: CreatePositionDTO): Promise<T | null>;
 

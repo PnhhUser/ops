@@ -14,7 +14,7 @@ export class PermissionService implements IPermissionService<PermissionEntity> {
     private readonly permissionRepository: IPermissionRepository<PermissionEntity>,
   ) {}
 
-  async getPermissions(): Promise<PermissionEntity[] | null> {
+  async getPermissions(): Promise<PermissionEntity[]> {
     return await this.permissionRepository.getAll();
   }
 
@@ -33,7 +33,7 @@ export class PermissionService implements IPermissionService<PermissionEntity> {
 
     await this.permissionRepository.add(created);
 
-    return created;
+    return await this.permissionRepository.getById(created.id);
   }
 
   async updatePermission(updatePermission: UpdatePermissionDTO) {
@@ -47,11 +47,21 @@ export class PermissionService implements IPermissionService<PermissionEntity> {
       );
     }
 
+    const keyExists = await this.permissionRepository.getByKey(
+      updatePermission.key,
+    );
+
+    if (keyExists && keyExists.id !== updatePermission.permissionId) {
+      throw ExceptionSerializer.conflict(
+        ErrorMessages.permission.PERMISSION_EXISTS,
+      );
+    }
+
     const updated = UpdatePermissionDTO.toEntity(updatePermission);
 
     await this.permissionRepository.update(updated);
 
-    return updated;
+    return await this.permissionRepository.getById(updated.id);
   }
 
   async removePermission(permissionId: number): Promise<void> {

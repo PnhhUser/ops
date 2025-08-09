@@ -14,7 +14,7 @@ export class RoleService implements IRoleService<RoleEntity> {
     private readonly roleRepository: IRoleRepository<RoleEntity>,
   ) {}
 
-  async getRoles(): Promise<RoleEntity[] | null> {
+  async getRoles(): Promise<RoleEntity[]> {
     return await this.roleRepository.getAll();
   }
 
@@ -29,7 +29,7 @@ export class RoleService implements IRoleService<RoleEntity> {
 
     await this.roleRepository.add(created);
 
-    return created;
+    return await this.roleRepository.getById(created.id);
   }
 
   async updateRole(updateRole: UpdateRoleDTO) {
@@ -41,7 +41,7 @@ export class RoleService implements IRoleService<RoleEntity> {
 
     const keyExists = await this.roleRepository.getByKey(updateRole.key);
 
-    if (keyExists) {
+    if (keyExists && keyExists.id !== updateRole.roleId) {
       throw ExceptionSerializer.conflict(ErrorMessages.role.ROLE_EXISTS);
     }
 
@@ -49,7 +49,7 @@ export class RoleService implements IRoleService<RoleEntity> {
 
     await this.roleRepository.update(updated);
 
-    return updated;
+    return await this.roleRepository.getById(updated.id);
   }
 
   async removeRole(roleId: number): Promise<void> {

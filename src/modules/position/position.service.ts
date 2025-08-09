@@ -14,7 +14,7 @@ export class PositionService implements IPositionService<PositionEntity> {
     private readonly positionRepository: IPositionRepository<PositionEntity>,
   ) {}
 
-  async getPositions(): Promise<PositionEntity[] | null> {
+  async getPositions(): Promise<PositionEntity[]> {
     return await this.positionRepository.getAll();
   }
 
@@ -60,6 +60,12 @@ export class PositionService implements IPositionService<PositionEntity> {
       if (isSameNameButDifferentId) {
         throw ExceptionSerializer.conflict('This position already exists');
       }
+    }
+
+    const keyExists = await this.positionRepository.getByKey(dto.key);
+
+    if (keyExists && keyExists.id !== dto.positionId) {
+      throw ExceptionSerializer.conflict('This position already exists');
     }
 
     const updated = UpdatePositionDTO.toEntity(dto);

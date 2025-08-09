@@ -3,7 +3,7 @@ import { CreateDepartmentDTO } from '../dto/create-department.dto';
 import { UpdateDepartmentDTO } from '../dto/update-department.dto';
 
 export interface IDepartmentService {
-  getDepartments(): Promise<DepartmentEntity[] | null>;
+  getDepartments(): Promise<DepartmentEntity[]>;
 
   addDepartment(dto: CreateDepartmentDTO): Promise<DepartmentEntity | null>;
 

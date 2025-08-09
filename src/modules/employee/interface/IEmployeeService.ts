@@ -4,7 +4,7 @@ import { UpdateEmployeeDTO } from '../dto/update-employee.dto';
 import { AccountEntity } from 'src/database/entities/account.entity';
 
 export interface IEmployeeService {
-  getEmployees(): Promise<EmployeeEntity[] | null>;
+  getEmployees(): Promise<EmployeeEntity[]>;
 
   addEmployee(newEmployee: CreateEmployeeDTO): Promise<EmployeeEntity | null>;
 
