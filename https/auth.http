@@ -8,8 +8,8 @@ POST {{local}}/auth/login
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "password": "admin123"
+  "username": "vu.tt.company",
+  "password": "123456"
 }
 
 ### 🔐 Check Auth (Kiểm tra access_token trong cookie)

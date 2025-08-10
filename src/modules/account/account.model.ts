@@ -1,4 +1,5 @@
 import { AccountEntity } from 'src/database/entities/account.entity';
+import { RoleEntity } from 'src/database/entities/role.entity';
 
 export class AccountModel {
   accountId: number;
@@ -6,6 +7,7 @@ export class AccountModel {
   roleId: number;
   isActive: boolean;
   lastseen: Date | null;
+  role: RoleEntity | null;
   createdAt: Date;
   updatedAt: Date;
 
@@ -19,6 +21,7 @@ export class AccountModel {
     model.accountId = entity.id;
     model.username = entity.username;
     model.roleId = entity.roleId;
+    model.role = entity.role;
     model.isActive = entity.isActive;
     model.lastseen = entity.lastSeen;
     model.createdAt = entity.createdAt;
@@ -34,6 +37,7 @@ export class AccountModel {
       model.accountId = entity.id;
       model.username = entity.username;
       model.roleId = entity.roleId;
+      model.role = entity.role;
       model.isActive = entity.isActive;
       model.lastseen = entity.lastSeen;
       model.createdAt = entity.createdAt;

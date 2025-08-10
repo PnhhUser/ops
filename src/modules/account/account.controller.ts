@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { responseSerialize } from 'src/common/serializers/response.serializer';
@@ -15,6 +16,10 @@ import { CreateAccountDTO } from './dto/create-account.dto';
 import { UpdateAccountDTO } from './dto/update-account.dto';
 import { IAccountService } from './interface/IAccountService';
 import { AccountModel } from './account.model';
+import { Request } from 'express';
+import { IJwtPayload } from '../auth/interface/IJwtPayload';
+import { RoleModel } from '../role/role.model';
+// import { RoleModel } from '../role/role.model';
 
 @UseGuards(JwtAuthGuard)
 @Controller('accounts')
@@ -31,6 +36,17 @@ export class AccountController {
     const model = AccountModel.toModels(accounts);
 
     return responseSerialize(model, 'Successfully fetched account list');
+  }
+
+  @Get('for-selection')
+  async getRolesForSelect(@Req() req: Request) {
+    const currentUser = req.user as IJwtPayload;
+
+    const roles = await this.accountService.getRolesForSelect(currentUser);
+
+    const models = RoleModel.toModels(roles);
+
+    return responseSerialize(models, 'Successfully fetched role list');
   }
 
   // Get account
@@ -55,8 +71,13 @@ export class AccountController {
 
   // Update account
   @Put()
-  async UpdateAccount(@Body() account: UpdateAccountDTO) {
-    const updated = await this.accountService.updateAccount(account);
+  async UpdateAccount(@Body() account: UpdateAccountDTO, @Req() req: Request) {
+    const currentUser = req.user as IJwtPayload;
+
+    const updated = await this.accountService.updateAccount(
+      account,
+      currentUser,
+    );
 
     const model = AccountModel.toModel(updated);
 
@@ -65,8 +86,10 @@ export class AccountController {
 
   // Remove account
   @Delete(':id')
-  async RemoveAccount(@Param('id') id: number) {
-    await this.accountService.removeAccount(id);
+  async RemoveAccount(@Param('id') id: number, @Req() req: Request) {
+    const currentUser = req.user as IJwtPayload;
+
+    await this.accountService.removeAccount(id, currentUser);
 
     return responseSerialize({}, 'Account remove successful');
   }

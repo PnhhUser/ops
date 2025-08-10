@@ -8,6 +8,7 @@ import { IAccountRepository } from 'src/database/repositories/interfaces/IAccoun
 import { AccountEntity } from 'src/database/entities/account.entity';
 import { IRoleRepository } from 'src/database/repositories/interfaces/IRoleRepository';
 import { RoleEntity } from 'src/database/entities/role.entity';
+import { IJwtPayload } from '../auth/interface/IJwtPayload';
 
 @Injectable()
 export class AccountService implements IAccountService {
@@ -15,7 +16,7 @@ export class AccountService implements IAccountService {
     @Inject('IAccountRepository')
     private readonly accountRepository: IAccountRepository<AccountEntity>,
     @Inject('IRoleRepository')
-    private readonly RoleRepository: IRoleRepository<RoleEntity>,
+    private readonly roleRepository: IRoleRepository<RoleEntity>,
   ) {}
 
   async getAccounts() {
@@ -23,6 +24,9 @@ export class AccountService implements IAccountService {
   }
 
   async getAccount(accountId: number): Promise<AccountEntity | null> {
+    if (typeof accountId !== 'number' || isNaN(accountId) || accountId <= 0) {
+      throw ExceptionSerializer.badRequest('Invalid account bababa ID');
+    }
     return await this.accountRepository.getById(accountId);
   }
 
@@ -35,7 +39,7 @@ export class AccountService implements IAccountService {
       );
     }
 
-    const role = await this.RoleRepository.getById(dto.roleId);
+    const role = await this.roleRepository.getById(dto.roleId);
 
     if (!role) {
       throw ExceptionSerializer.badRequest('This role does not exist');
@@ -48,12 +52,24 @@ export class AccountService implements IAccountService {
     return create;
   }
 
-  async updateAccount(dto: UpdateAccountDTO) {
+  async updateAccount(dto: UpdateAccountDTO, currentUser: IJwtPayload) {
     const existedAccount = await this.accountRepository.getById(dto.accountId);
 
     if (!existedAccount) {
       throw ExceptionSerializer.notFound(
         ErrorMessages.account.ACCOUNT_NOT_FOUND,
+      );
+    }
+
+    // Lấy role gửi lên
+    const targetRole = await this.roleRepository.getById(existedAccount.roleId);
+
+    // Lấy role của người đang đăng nhập
+    const current = await this.accountRepository.getById(currentUser.sub);
+
+    if (current && current.role.key === 'user' && targetRole?.key === 'admin') {
+      throw ExceptionSerializer.forbidden(
+        'You are not allowed to modify an admin account.',
       );
     }
 
@@ -67,13 +83,11 @@ export class AccountService implements IAccountService {
       );
     }
 
-    const role = await this.RoleRepository.getById(dto.roleId);
+    const role = await this.roleRepository.getById(dto.roleId);
 
     if (!role) {
       throw ExceptionSerializer.badRequest('This role does not exist');
     }
-
-    // check pass nếu nó là ''
 
     const update = await UpdateAccountDTO.toEntity(dto);
 
@@ -86,7 +100,7 @@ export class AccountService implements IAccountService {
     return update;
   }
 
-  async removeAccount(accountId: number) {
+  async removeAccount(accountId: number, currentUser: IJwtPayload) {
     if (typeof accountId !== 'number') {
       throw ExceptionSerializer.badRequest(
         ErrorMessages.account.ACCOUNT_ID_NOT_INTEGER,
@@ -107,6 +121,24 @@ export class AccountService implements IAccountService {
       );
     }
 
+    // Lấy role gửi lên
+    const targetRole = await this.roleRepository.getById(existedAccount.roleId);
+
+    // Lấy role của người đang đăng nhập
+    const current = await this.accountRepository.getById(currentUser.sub);
+
+    if (current && current.role.key === 'user' && targetRole?.key === 'admin') {
+      throw ExceptionSerializer.forbidden(
+        'You are not allowed to delete an admin account.',
+      );
+    }
+
+    if (current?.role.key === 'admin' && current.id === existedAccount.id) {
+      throw ExceptionSerializer.forbidden(
+        'You cannot delete your own account as an admin.',
+      );
+    }
+
     await this.accountRepository.delete(existedAccount.id);
   }
 
@@ -116,5 +148,17 @@ export class AccountService implements IAccountService {
       account.lastSeen = null;
       await this.accountRepository.update(account);
     }
+  }
+
+  async getRolesForSelect(currentUser: IJwtPayload): Promise<RoleEntity[]> {
+    const account = await this.accountRepository.getById(currentUser.sub);
+
+    // Nếu admin → lấy tất cả role
+    if (account && account.role.key === 'admin') {
+      return await this.roleRepository.getAll();
+    }
+
+    // Nếu user → lọc bỏ role admin
+    return await this.roleRepository.getAllExcept('admin');
   }
 }

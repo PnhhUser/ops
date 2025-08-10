@@ -21,7 +21,7 @@ export async function seedDefaultAccount(dataSource: DataSource) {
 
   const admin = new AccountEntity();
   admin.username = 'admin';
-  admin.password = await bcrypt.hash('admin123', 10);
+  admin.password = await bcrypt.hash('123456', 10);
   admin.role = adminRole;
 
   await accountRepo.save(admin);

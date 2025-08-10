@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { RoleEntity } from '../entities/role.entity';
-import { UserRole } from '../../common/constants/enums/role.enum';
+import { RoleType, UserRole } from '../../common/constants/enums/role.enum';
 
 export async function seedRoles(dataSource: DataSource) {
   const roleRepo = dataSource.getRepository(RoleEntity);
@@ -11,16 +11,22 @@ export async function seedRoles(dataSource: DataSource) {
     return;
   }
 
+  // xóa dữ liệu cũ
+  console.log('🗑️ Clearing existing roles...');
+  await roleRepo.clear();
+
   const roles = [
     {
       key: UserRole.ADMIN,
       name: 'Quản trị hệ thống',
       description: 'Toàn quyền truy cập và chỉnh sửa',
+      type: RoleType.SYSTEM, // System role cannot be deleted/edited
     },
     {
       key: UserRole.USER,
       name: 'Người dùng',
       description: 'Truy cập thông thường',
+      type: RoleType.SYSTEM, // System role cannot be deleted/edited
     },
   ];
 

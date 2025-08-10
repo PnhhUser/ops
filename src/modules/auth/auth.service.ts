@@ -38,6 +38,12 @@ export class AuthService {
       );
     }
 
+    if (account.isActive === false) {
+      throw ExceptionSerializer.unauthorized(
+        'Tài khoản ' + account.username + ' đã bị khóa',
+      );
+    }
+
     const accessToken = await this.generateAccessToken(
       account.id,
       account.username,

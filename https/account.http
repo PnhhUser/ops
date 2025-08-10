@@ -1,5 +1,5 @@
-# @local=http://localhost:3000/api
-@local=https://ops.up.railway.app/api
+@local=http://localhost:3000/api
+# @local=https://ops.up.railway.app/api
 @token= access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsIm5hbWUiOiJob2FuZyIsImlhdCI6MTc1MjUzOTY1NywiZXhwIjoxNzUyNTQzMjU3fQ.sWleCZf4JbdyGP97WQtMrFhEJTuNu4wUH7Whldf2eA4;
 
 ### 📥 Get All Accounts
@@ -7,7 +7,11 @@ GET {{local}}/accounts
 Cookie: {{token}}
 
 ### 📥 Get one Account
-GET {{local}}/accounts/2
+GET {{local}}/accounts/21
+Cookie: {{token}}
+
+###----------
+GET {{local}}/accounts/for-selection
 Cookie: {{token}}
 
 

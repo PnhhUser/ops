@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { RolePermissionMappingEntity } from './role-permission-mapping.entity';
 import { AccountEntity } from './account.entity';
+import { RoleType } from 'src/common/constants/enums/role.enum';
 
 @Entity({ name: 'roles' })
 export class RoleEntity {
@@ -19,6 +20,9 @@ export class RoleEntity {
 
   @Column()
   name: string; // Quản trị viên, Người dùng
+
+  @Column({ type: 'enum', enum: RoleType, default: RoleType.CUSTOM })
+  type: RoleType; // Loại role: system, custom
 
   @Column({ type: 'varchar', nullable: true })
   description: string | null;

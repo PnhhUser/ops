@@ -50,6 +50,7 @@ export class EmployeeEntity {
 
   @OneToOne(() => AccountEntity, (account) => account.employee, {
     nullable: true,
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'accountId' })
   account: AccountEntity | null;
