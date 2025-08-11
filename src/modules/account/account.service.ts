@@ -141,18 +141,20 @@ export class AccountService implements IAccountService {
       );
     }
 
-    // Lấy role gửi lên
+    // Lấy role của tài khoản bị xóa
     const targetRole = await this.roleRepository.getById(existedAccount.roleId);
 
-    // Lấy role của người đang đăng nhập
+    // Lấy tài khoản và role của người đang đăng nhập
     const current = await this.accountRepository.getById(currentUser.sub);
 
-    if (current && current.role.key === 'user' && targetRole?.key === 'admin') {
+    // Chỉ admin mới được xóa admin
+    if (targetRole?.key === 'admin' && current?.role.key !== 'admin') {
       throw ExceptionSerializer.forbidden(
-        'You are not allowed to delete an admin account.',
+        'Only admin can delete an admin account.',
       );
     }
 
+    // Admin không thể tự xóa chính mình
     if (current?.role.key === 'admin' && current.id === existedAccount.id) {
       throw ExceptionSerializer.forbidden(
         'You cannot delete your own account as an admin.',
