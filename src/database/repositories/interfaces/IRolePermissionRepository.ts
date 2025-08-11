@@ -14,4 +14,6 @@ export interface IRolePermissionRepository<T> {
   deletePermission(roleId: number, permissionId: number): Promise<void>;
 
   getPermissionsByRole(roleId: number): Promise<PermissionEntity[]>;
+
+  getMappingsByRole(roleId: number): Promise<T[]>;
 }

@@ -1,4 +1,4 @@
-import { IsInt, Min, IsArray, ArrayNotEmpty } from 'class-validator';
+import { IsInt, Min, IsArray } from 'class-validator';
 
 export class RolePermissionDTO {
   @IsInt()
@@ -6,7 +6,6 @@ export class RolePermissionDTO {
   roleId: number;
 
   @IsArray()
-  @ArrayNotEmpty()
   @IsInt({ each: true })
   @Min(1, { each: true })
   permissionIds: number[];

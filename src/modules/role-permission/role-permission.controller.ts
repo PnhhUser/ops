@@ -30,22 +30,38 @@ export class RolePermissionController {
 
   @Put()
   async updateRolePermission(@Body() dto: RolePermissionDTO) {
-    await this.rolePermissionService.updatePermissionsForRole(
+    const mapping = await this.rolePermissionService.updatePermissionsForRole(
       dto.roleId,
       dto.permissionIds,
     );
 
-    return responseSerialize({}, 'Updated permissions for role successfully');
+    return responseSerialize(
+      mapping,
+      'Updated permissions for role successfully',
+    );
+  }
+
+  @Put('saved')
+  async saveRolePermissions(@Body() dto: RolePermissionDTO) {
+    const mapping = await this.rolePermissionService.saveRolePermissions(
+      dto.roleId,
+      dto.permissionIds,
+    );
+
+    return responseSerialize(
+      mapping,
+      'Saved permissions for role successfully',
+    );
   }
 
   @Post()
   async assign(@Body() dto: RolePermissionDTO) {
-    await this.rolePermissionService.assignPermissions(
+    const mapping = await this.rolePermissionService.assignPermissions(
       dto.roleId,
       dto.permissionIds,
     );
 
-    return responseSerialize({}, 'Permissions assigned successfully');
+    return responseSerialize(mapping, 'Permissions assigned successfully');
   }
 
   @Delete(':roleId/:permissionId')

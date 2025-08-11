@@ -63,4 +63,12 @@ export class RolePermissionRepository
 
     return mappings.map((m) => m.permission);
   }
+
+  async getMappingsByRole(
+    roleId: number,
+  ): Promise<RolePermissionMappingEntity[]> {
+    return await this.repository.find({
+      where: { role: { id: roleId } },
+    });
+  }
 }
