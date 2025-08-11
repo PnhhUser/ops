@@ -20,4 +20,10 @@ export class AccountRepository
   async getByUsername(username: string): Promise<AccountEntity | null> {
     return await this.repository.findOneBy({ username });
   }
+
+  async countByRoleKey(roleKey: string): Promise<number> {
+    return this.repository.count({
+      where: { role: { key: roleKey } },
+    });
+  }
 }

@@ -49,7 +49,7 @@ export class AccountService implements IAccountService {
 
     await this.accountRepository.add(create);
 
-    return create;
+    return await this.accountRepository.getById(create.id);
   }
 
   async updateAccount(dto: UpdateAccountDTO, currentUser: IJwtPayload) {
@@ -61,13 +61,37 @@ export class AccountService implements IAccountService {
       );
     }
 
-    // Lấy role gửi lên
-    const targetRole = await this.roleRepository.getById(existedAccount.roleId);
+    // Nếu đây là admin duy nhất → không cho đổi role
+    if (existedAccount.role.key === 'admin') {
+      const totalAdmins = await this.accountRepository.countByRoleKey('admin');
+      if (totalAdmins === 1 && dto.roleId !== existedAccount.roleId) {
+        throw ExceptionSerializer.forbidden(
+          'You cannot change the role of the only remaining admin.',
+        );
+      }
+    }
 
     // Lấy role của người đang đăng nhập
     const current = await this.accountRepository.getById(currentUser.sub);
 
-    if (current && current.role.key === 'user' && targetRole?.key === 'admin') {
+    if (!current) {
+      throw ExceptionSerializer.unauthorized('Current user not found.');
+    }
+
+    // Nếu user đang sửa chính mình → không được đổi role
+    if (
+      current.id === existedAccount.id &&
+      current.role.key !== 'admin' &&
+      dto.roleId !== existedAccount.roleId
+    ) {
+      throw ExceptionSerializer.forbidden(
+        'You are not allowed to change your own role.',
+      );
+    }
+
+    // Nếu user thường muốn sửa admin → cấm
+    const targetRole = await this.roleRepository.getById(existedAccount.roleId);
+    if (current.role.key === 'user' && targetRole?.key === 'admin') {
       throw ExceptionSerializer.forbidden(
         'You are not allowed to modify an admin account.',
       );
@@ -76,7 +100,6 @@ export class AccountService implements IAccountService {
     const duplicatedUsername = await this.accountRepository.getByUsername(
       dto.username,
     );
-
     if (duplicatedUsername && duplicatedUsername.id !== dto.accountId) {
       throw ExceptionSerializer.conflict(
         ErrorMessages.account.ACCOUNT_USERNAME_EXISTS,
@@ -84,20 +107,17 @@ export class AccountService implements IAccountService {
     }
 
     const role = await this.roleRepository.getById(dto.roleId);
-
     if (!role) {
       throw ExceptionSerializer.badRequest('This role does not exist');
     }
 
     const update = await UpdateAccountDTO.toEntity(dto);
-
     if (!dto.password || dto.password.trim() === '') {
       update.password = existedAccount.password;
     }
 
     await this.accountRepository.update(update);
-
-    return update;
+    return await this.accountRepository.getById(update.id);
   }
 
   async removeAccount(accountId: number, currentUser: IJwtPayload) {

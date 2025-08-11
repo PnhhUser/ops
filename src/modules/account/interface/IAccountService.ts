@@ -9,12 +9,12 @@ export interface IAccountService {
 
   getAccount(accountId: number): Promise<AccountEntity | null>;
 
-  addAccount(newAccount: CreateAccountDTO): Promise<AccountEntity>;
+  addAccount(newAccount: CreateAccountDTO): Promise<AccountEntity | null>;
 
   updateAccount(
     updateAccount: UpdateAccountDTO,
     currentUser: IJwtPayload,
-  ): Promise<AccountEntity>;
+  ): Promise<AccountEntity | null>;
 
   removeAccount(accountId: number, currentUser: IJwtPayload): Promise<void>;
 
