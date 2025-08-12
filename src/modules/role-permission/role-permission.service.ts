@@ -130,4 +130,24 @@ export class RolePermissionService implements IRolePermissionService {
 
     return await this.rolePermissionRepository.getPermissionsByRole(roleId);
   }
+
+  // Check if the role has the specific permission
+  async hasPermission(roleId: number, permissionId: number): Promise<boolean> {
+    const role = await this.roleRepository.getById(roleId);
+    if (!role) {
+      throw ExceptionSerializer.notFound('Role not found');
+    }
+
+    const permission = await this.permissionRepository.getById(permissionId);
+    if (!permission) {
+      throw ExceptionSerializer.notFound('Permission not found');
+    }
+
+    const mapping = await this.rolePermissionRepository.findMapping(
+      roleId,
+      permissionId,
+    );
+
+    return !!mapping;
+  }
 }

@@ -72,4 +72,19 @@ export class RolePermissionController {
     await this.rolePermissionService.removePermission(roleId, permissionId);
     return responseSerialize({}, 'Permission removed successfully');
   }
+
+  @Get('has-permission/:roleId/:permissionId')
+  async hasPermission(
+    @Param('roleId') roleId: number,
+    @Param('permissionId') permissionId: number,
+  ) {
+    const hasPermission = await this.rolePermissionService.hasPermission(
+      roleId,
+      permissionId,
+    );
+    return responseSerialize(
+      { hasPermission },
+      'Checked permission successfully',
+    );
+  }
 }

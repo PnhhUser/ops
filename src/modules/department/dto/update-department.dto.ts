@@ -7,8 +7,8 @@ export class UpdateDepartmentDTO extends CreateDepartmentDTO {
   @IsInt()
   departmentId: number;
 
-  static override toEnity(dto: UpdateDepartmentDTO): DepartmentEntity {
-    const enitty = super.toEnity(dto);
+  static override toEntity(dto: UpdateDepartmentDTO): DepartmentEntity {
+    const enitty = super.toEntity(dto);
 
     enitty.id = dto.departmentId;
 

@@ -37,7 +37,7 @@ export class DepartmentService implements IDepartmentService {
       );
     }
 
-    const department = CreateDepartmentDTO.toEnity(dto);
+    const department = CreateDepartmentDTO.toEntity(dto);
 
     await this.departmentRepository.add(department);
 
@@ -71,7 +71,7 @@ export class DepartmentService implements IDepartmentService {
       throw ExceptionSerializer.conflict('This department already exists');
     }
 
-    const updated = UpdateDepartmentDTO.toEnity(dto);
+    const updated = UpdateDepartmentDTO.toEntity(dto);
 
     await this.departmentRepository.update(updated);
 

@@ -15,7 +15,7 @@ export class CreateDepartmentDTO {
   @IsNotEmpty()
   key: string;
 
-  static toEnity(dto: CreateDepartmentDTO): DepartmentEntity {
+  static toEntity(dto: CreateDepartmentDTO): DepartmentEntity {
     const entity = new DepartmentEntity();
 
     entity.name = dto.name;

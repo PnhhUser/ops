@@ -19,4 +19,6 @@ export interface IRolePermissionService {
     roleId: number,
     permissionIds: number[],
   ): Promise<PermissionEntity[]>;
+
+  hasPermission(roleId: number, permissionId: number): Promise<boolean>;
 }
