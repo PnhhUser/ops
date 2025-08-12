@@ -1,7 +1,7 @@
 import { RolePermissionMappingEntity } from './../entities/role-permission-mapping.entity';
 import { DataSource } from 'typeorm';
 
-export async function seedPermission(dataSource: DataSource) {
+export async function seedRolePermissionMapping(dataSource: DataSource) {
   const rolePermissionMapping = dataSource.getRepository(
     RolePermissionMappingEntity,
   );
@@ -20,6 +20,8 @@ export async function seedPermission(dataSource: DataSource) {
       permissionId: i,
     });
   }
+
+  console.log(roleSetup);
 
   await rolePermissionMapping.save(roleSetup);
 
