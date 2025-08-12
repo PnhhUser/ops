@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import { PermissionEntity } from '../entities/permission.entity';
+import { PERMISSIONS } from 'src/common/constants/permissions.constant';
 export async function seedPermission(dataSource: DataSource) {
   const permissionRepo = dataSource.getRepository(PermissionEntity);
 
@@ -11,24 +12,64 @@ export async function seedPermission(dataSource: DataSource) {
 
   const permissions = [
     {
-      key: 'create',
-      name: 'Tạo mới',
-      description: 'Cho phép tạo mới dữ liệu',
+      key: PERMISSIONS.dashboard,
+      name: 'Dashboard',
     },
     {
-      key: 'update',
-      name: 'Sửa',
-      description: 'Cho phép sửa dữ liệu',
+      key: PERMISSIONS.modules,
+      name: 'Modules',
     },
     {
-      key: 'remove',
-      name: 'Xóa',
-      description: 'Cho phép xóa dữ liệu',
+      key: PERMISSIONS.analytics,
+      name: 'Analytics',
     },
     {
-      key: 'view',
-      name: 'Xem',
-      description: 'Cho phép xem dữ liệu',
+      key: PERMISSIONS.settings,
+      name: 'Settings',
+    },
+    {
+      key: PERMISSIONS.access_control,
+      name: 'Access Control',
+    },
+    {
+      key: PERMISSIONS.hr_management,
+      name: 'HR Management',
+    },
+    {
+      key: PERMISSIONS.accounts,
+      name: 'Accounts',
+    },
+    {
+      key: PERMISSIONS.customers_management,
+      name: 'Customers Management',
+    },
+    {
+      key: PERMISSIONS.departments,
+      name: 'Departments',
+    },
+    {
+      key: PERMISSIONS.positions,
+      name: 'Positions',
+    },
+    {
+      key: PERMISSIONS.roles,
+      name: 'Roles',
+    },
+    {
+      key: PERMISSIONS.permissions,
+      name: 'Permissions',
+    },
+    {
+      key: PERMISSIONS.employees,
+      name: 'Employees',
+    },
+    {
+      key: PERMISSIONS.roleSetup,
+      name: 'Role Setup',
+    },
+    {
+      key: PERMISSIONS.storagies,
+      name: 'Storagies',
     },
   ];
 
