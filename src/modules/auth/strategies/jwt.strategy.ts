@@ -41,6 +41,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt-access') {
       await this.accountRepository.update(account);
     }
 
-    return { sub: payload.sub, name: payload.name };
+    return { sub: payload.sub, name: payload.name, roleId: payload.roleId };
   }
 }

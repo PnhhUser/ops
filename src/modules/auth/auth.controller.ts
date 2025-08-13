@@ -50,6 +50,7 @@ export class AuthController {
     const refreshToken = await this.authService.generateRefreshToken(
       account.userId,
       account.name,
+      account.roleId,
     );
 
     // Ghi access token vào cookie
@@ -73,7 +74,7 @@ export class AuthController {
     // Lấy thông tin người dùng đã ghi vào access token
 
     return responseSerialize(
-      { id: account.userId, name: account.name },
+      { id: account.userId, name: account.name, roleId: account.roleId },
       'Login successfully',
     );
   }
@@ -88,7 +89,7 @@ export class AuthController {
   checkAuth(@Req() req: Request) {
     const user = req.user as IJwtPayload;
     return responseSerialize(
-      { id: user.sub, name: user.name },
+      { id: user.sub, name: user.name, roleId: user.roleId },
       'Authenticated',
     );
   }
@@ -109,6 +110,7 @@ export class AuthController {
     const newAccessToken = await this.authService.generateAccessToken(
       user.sub,
       user.name,
+      user.roleId,
     );
 
     const env = this.configService.get<string>('app.env');

@@ -29,6 +29,7 @@ export class AuthService {
     accessToken: string;
     userId: number;
     name: string;
+    roleId: number;
   }> {
     const account = await this.validate(username, password);
 
@@ -47,12 +48,14 @@ export class AuthService {
     const accessToken = await this.generateAccessToken(
       account.id,
       account.username,
+      account.roleId,
     );
 
     return {
       accessToken,
       userId: account.id,
       name: account.username,
+      roleId: account.roleId,
     };
   }
 
@@ -75,8 +78,12 @@ export class AuthService {
   /**
    * Tạo access_token từ userId + username
    */
-  async generateAccessToken(userId: number, username: string): Promise<string> {
-    const payload: IJwtPayload = { sub: userId, name: username };
+  async generateAccessToken(
+    userId: number,
+    username: string,
+    roleId: number,
+  ): Promise<string> {
+    const payload: IJwtPayload = { sub: userId, name: username, roleId };
 
     return this.jwtService.signAsync(payload, {
       expiresIn: this.jwtType.expiresIn,
@@ -90,8 +97,9 @@ export class AuthService {
   async generateRefreshToken(
     userId: number,
     username: string,
+    roleId: number,
   ): Promise<string> {
-    const payload: IJwtPayload = { sub: userId, name: username };
+    const payload: IJwtPayload = { sub: userId, name: username, roleId };
 
     return this.jwtService.signAsync(payload, {
       expiresIn: this.jwtType.refreshIn,
