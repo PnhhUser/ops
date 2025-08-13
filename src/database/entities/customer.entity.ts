@@ -20,9 +20,6 @@ export class CustomerEntity {
   @Column({ type: 'varchar', length: 100 })
   fullName: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true, nullable: true })
-  email: string | null;
-
   @Column({ type: 'varchar', length: 20, unique: true, nullable: true })
   phone: string | null;
 

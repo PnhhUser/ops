@@ -10,3 +10,8 @@ export enum OrderStatus {
   DELIVERED = 'delivered', // đơn hàng thành công
   FAILED = 'failed', // Lỗi đơn hàng (vd: thanh toán thất bại)
 }
+
+export enum PaymentMethod {
+  CASH = 'cash',
+  BANK_TRANSFER = 'bank_transfer',
+}

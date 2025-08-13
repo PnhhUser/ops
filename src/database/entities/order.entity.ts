@@ -11,7 +11,10 @@ import {
 } from 'typeorm';
 import { CustomerEntity } from './customer.entity';
 import { OrderItemEntity } from './orderItem.entity';
-import { OrderStatus } from 'src/common/constants/enums/production.enum';
+import {
+  OrderStatus,
+  PaymentMethod,
+} from 'src/common/constants/enums/production.enum';
 import { DiscountEntity } from './discount.entity';
 
 @Entity({ name: 'orders' })
@@ -20,7 +23,7 @@ export class OrderEntity {
   id: number;
 
   @ManyToOne(() => CustomerEntity, { nullable: false })
-  @JoinColumn({ name: 'customer_id' })
+  @JoinColumn({ name: 'customerId' })
   customer: CustomerEntity;
 
   @RelationId((order: OrderEntity) => order.customer)
@@ -35,8 +38,8 @@ export class OrderEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   shippingAddress: string | null;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  paymentMethod: string | null;
+  @Column({ type: 'enum', enum: PaymentMethod, nullable: true })
+  paymentMethod: PaymentMethod | null;
 
   @Column({ type: 'text', nullable: true })
   note: string | null;
