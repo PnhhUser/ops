@@ -124,7 +124,7 @@ export class AuthController {
     });
 
     return responseSerialize(
-      { id: user.sub, name: user.name },
+      { id: user.sub, name: user.name, roleId: user.roleId },
       'Access token refreshed',
     );
   }
