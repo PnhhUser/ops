@@ -32,7 +32,7 @@ export class PositionEntity {
   @OneToMany(() => EmployeeEntity, (employee) => employee.position)
   employees: EmployeeEntity[];
 
-  @ManyToOne(() => DepartmentEntity, (department) => department.positions, {
+  @ManyToOne(() => DepartmentEntity, {
     nullable: true,
     onDelete: 'SET NULL',
   })
