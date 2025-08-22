@@ -14,6 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { EmployeeModule } from './modules/employee/employee.module';
 import { RolePermissionModule } from './modules/role-permission/role-permission.module';
 import { DepartmentModule } from './modules/department/department.module';
+import { AttendanceModule } from './modules/attendance/attendance.module';
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 dotenv.config({
@@ -32,6 +33,7 @@ dotenv.config({
     EmployeeModule,
     RolePermissionModule,
     DepartmentModule,
+    AttendanceModule,
   ],
   providers: [],
 })

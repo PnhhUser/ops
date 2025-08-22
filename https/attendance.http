@@ -1,0 +1,40 @@
+@local = http://localhost:3000/api
+@token= access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI4LCJuYW1lIjoiaG9hbmciLCJyb2xlSWQiOjEsImlhdCI6MTc1NTI1NTI0OSwiZXhwIjoxNzU1MjY2MDQ5fQ.RMrSCI7-3817lHvyufEbi-zH24uuAx-wxO-pWbtSpYM;
+
+### Get list of departments
+GET {{local}}/attendance/employee/16?month=8&year=2025
+Cookie: {{token}}
+
+
+### create one
+POST {{local}}/attendance
+Content-Type: application/json
+
+{
+    "date": "2025-08-15",
+    "checkInTime": "08:05:00",
+    "checkOutTime": "17:30:00",
+    "employeeId": 16,
+    "status": "present"
+}
+
+### create many
+POST {{local}}/attendance/bulk
+Content-Type: application/json
+
+[
+  {
+    "date": "2025-07-15",
+    "checkInTime": "08:05:00",
+    "checkOutTime": "17:30:00",
+    "employeeId": 16,
+    "status": "present"
+  },
+  {
+    "date": "2025-08-16",
+    "checkInTime": "08:10:00",
+    "checkOutTime": "17:25:00",
+    "employeeId": 17,
+    "status": "present"
+  }
+]

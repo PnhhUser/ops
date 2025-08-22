@@ -3,3 +3,9 @@ export enum Gender {
   FEMALE = 'female',
   OTHER = 'other',
 }
+
+export enum AttendanceStatus {
+  PRESENT = 'present',
+  ABSENT = 'absent',
+  LEAVE = 'leave',
+}

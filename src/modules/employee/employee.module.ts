@@ -26,5 +26,6 @@ import { AccountModule } from '../account/account.module';
       useClass: EmployeeRepository,
     },
   ],
+  exports: ['IEmployeeService', 'IEmployeeRepository'],
 })
 export class EmployeeModule {}
